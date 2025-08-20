@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rust:block/waxed_weathered_iron_block"
+  }
+}

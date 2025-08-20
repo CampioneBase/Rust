@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_lantern",
+  "textures": {
+    "lantern": "rust:block/oxidized_soul_lantern"
+  }
+}

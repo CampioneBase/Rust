@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_right",
+  "textures": {
+    "bottom": "rust:block/waxed_oxidized_iron_door_bottom",
+    "top": "rust:block/waxed_oxidized_iron_door_top"
+  }
+}

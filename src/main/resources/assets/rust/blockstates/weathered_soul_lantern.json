@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "rust:block/weathered_soul_lantern/weathered_soul_lantern"
+    },
+    "hanging=true": {
+      "model": "rust:block/weathered_soul_lantern/weathered_soul_lantern_hanging"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "rust:block/waxed_exposed_soul_lantern/waxed_exposed_soul_lantern"
+    },
+    "hanging=true": {
+      "model": "rust:block/waxed_exposed_soul_lantern/waxed_exposed_soul_lantern_hanging"
+    }
+  }
+}

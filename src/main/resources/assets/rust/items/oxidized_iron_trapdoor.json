@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "rust:block/oxidized_iron_trapdoor/oxidized_iron_trapdoor_bottom"
+  }
+}

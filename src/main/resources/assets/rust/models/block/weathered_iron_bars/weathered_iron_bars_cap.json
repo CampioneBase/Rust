@@ -1,0 +1,8 @@
+{
+  "parent": "block/iron_bars_cap",
+  "textures": {
+    "particle": "rust:block/weathered_iron_bars",
+    "bars": "rust:block/weathered_iron_bars",
+    "edge": "rust:block/weathered_iron_bars"
+  }
+}

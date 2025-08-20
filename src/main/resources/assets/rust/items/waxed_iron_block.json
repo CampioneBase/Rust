@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "rust:block/waxed_iron_block"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "rust:block/oxidized_lantern/oxidized_lantern"
+    },
+    "hanging=true": {
+      "model": "rust:block/oxidized_lantern/oxidized_lantern_hanging"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "values": [
+    "rust:exposed_iron_trapdoor",
+    "rust:weathered_iron_trapdoor",
+    "rust:oxidized_iron_trapdoor",
+    "rust:waxed_iron_trapdoor",
+    "rust:waxed_exposed_iron_trapdoor",
+    "rust:waxed_weathered_iron_trapdoor",
+    "rust:waxed_oxidized_iron_trapdoor"
+  ]
+}

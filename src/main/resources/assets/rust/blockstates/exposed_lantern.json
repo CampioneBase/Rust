@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "rust:block/exposed_lantern/exposed_lantern"
+    },
+    "hanging=true": {
+      "model": "rust:block/exposed_lantern/exposed_lantern_hanging"
+    }
+  }
+}

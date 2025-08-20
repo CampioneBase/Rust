@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:iron_helmet",
+    "minecraft:honeycomb"
+  ],
+  "result": {
+    "count": 1,
+    "id": "rust:waxed_iron_helmet"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "rust:block/exposed_heavy_weighted_pressure_plate/exposed_heavy_weighted_pressure_plate"
+  }
+}

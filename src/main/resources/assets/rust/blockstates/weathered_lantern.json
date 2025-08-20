@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "rust:block/weathered_lantern/weathered_lantern"
+    },
+    "hanging=true": {
+      "model": "rust:block/weathered_lantern/weathered_lantern_hanging"
+    }
+  }
+}

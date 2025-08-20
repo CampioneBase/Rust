@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "rust:item/weathered_cauldron"
+  }
+}

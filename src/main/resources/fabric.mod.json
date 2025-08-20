@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "rust",
+	"version": "${version}",
+	"name": "rust",
+	"description": "A mod allows other blocks or items to also rust",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/rust/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.adccadc.rust.Rust"
+		],
+		"fabric-datagen": [
+			"com.adccadc.rust.RustDataGenerator"
+		]
+	},
+	"mixins": [
+		"rust.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.13",
+		"minecraft": "~1.21.6",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

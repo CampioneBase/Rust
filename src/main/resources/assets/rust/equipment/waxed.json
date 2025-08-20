@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "rust:waxed"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "rust:waxed"
+      }
+    ]
+  }
+}
