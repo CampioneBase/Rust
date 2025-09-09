@@ -128,9 +128,6 @@ public class ModItemGroups {
 
             itemGroup.add(Moditems.RUSTY_IRON_BOOTS);
             itemGroup.add(Moditems.WAXED_IRON_BOOTS);
-
-            itemGroup.add(Moditems.RUSTY_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.WAXED_IRON_GOLEM_EGG);
         });
     }
 }
