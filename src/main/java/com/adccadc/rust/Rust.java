@@ -2,6 +2,8 @@ package com.adccadc.rust;
 
 import com.adccadc.rust.block.Modblocks;
 import com.adccadc.rust.effect.ModEffects;
+import com.adccadc.rust.entity.EntityReplace;
+import com.adccadc.rust.entity.ModEntity;
 import com.adccadc.rust.item.ItemReplace;
 import com.adccadc.rust.item.ModItemGroups;
 import com.adccadc.rust.item.Moditems;
@@ -9,20 +11,27 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +44,59 @@ public class Rust implements ModInitializer {
 	public static final String MOD_ID = "rust";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+    public static void UseLater(
+            ItemStack useItem, PlayerEntity player,
+            Integer integer, BlockHitResult blockHitResult, EntityHitResult entityHitResult,
+            ServerWorld serverWorld, Vec3d vec3d, BlockPos pos,
+            ParticleEffect particle,
+            ItemConvertible dropItem, Integer count
+    ) {
+        if (integer != null && blockHitResult == null && entityHitResult == null) {
+            useItem.damage(integer, player);
+        }
+        if (blockHitResult != null && integer != null) {
+                useItem.decrementUnlessCreative(integer, player);
+        }
+        if (entityHitResult != null && integer != null) {
+                useItem.decrementUnlessCreative(integer, player);
+        }
+
+        if (particle != null) {
+            if (vec3d != null) {
+                serverWorld.spawnParticles(particle, vec3d.getX() + 0.5, vec3d.getY() + 0.5, vec3d.getZ() + 0.5,25, 0.4, 0.4, 0.4, 0.0);
+            }
+            if (pos != null) {
+                serverWorld.spawnParticles(particle, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,25, 0.4, 0.4, 0.4, 0.0);
+            }
+        }
+
+        if(dropItem != null) {
+            ItemEntity drop = null;
+            if (vec3d != null) {
+                    drop = new ItemEntity(
+                        serverWorld,
+                            vec3d.getX() + 0.5, vec3d.getY() + 0.5, vec3d.getZ() + 0.5,
+                        new ItemStack(dropItem, count)
+                );
+            }
+            if (pos != null) {
+                drop = new ItemEntity(
+                        serverWorld,
+                        pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                        new ItemStack(dropItem, count)
+                );
+            }
+            serverWorld.spawnEntity(drop);
+        }
+    }
+
 	@Override
 	public void onInitialize() {
         Moditems.initialize();
         ModItemGroups.register();
         Modblocks.initialize();
         ModEffects.initialize();
+        ModEntity.initialize();
 
         // 破伤风
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
@@ -99,6 +155,7 @@ public class Rust implements ModInitializer {
                                 List.of(Items.IRON_SWORD, Items.IRON_AXE, Items.IRON_PICKAXE, Items.IRON_SHOVEL, Items.IRON_HOE, Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS),
                                 List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE, Moditems.RUSTY_IRON_HELMET, Moditems.RUSTY_IRON_CHESTPLATE, Moditems.RUSTY_IRON_LEGGINGS, Moditems.RUSTY_IRON_BOOTS),
                                 player);
+                        EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
                         for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
                             BlockState state = world.getBlockState(pos);
                             Block block = state.getBlock();
@@ -135,13 +192,9 @@ public class Rust implements ModInitializer {
                     }
 
                     BlockUtils.PutWhichBlockWithAttribute(world, waxedBlock, state, pos);
-                    // 粒子效果
-                    if (world instanceof ServerWorld serverWorld) {
-                        serverWorld.spawnParticles(ParticleTypes.WAX_ON, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 20, 0.4, 0.4, 0.4, 0.0);
-                    }
-                    // 消耗蜜脾
-                    if (!player.isCreative()) {
-                        stack.useOnBlock(new ItemUsageContext(player, hand, hitResult));
+
+                    if (world instanceof ServerWorld) {
+                        UseLater(stack, player, 1, hitResult, null, (ServerWorld) world, null, pos, ParticleTypes.WAX_ON, null, null);
                     }
                     // 播放涂蜡音效
                     world.playSound(null, pos, SoundEvents.ITEM_HONEYCOMB_WAX_ON, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -159,12 +212,8 @@ public class Rust implements ModInitializer {
                     Block unwaxedBlock = HoneyMap.UNWAXABLE_BLOCKS.get(block);
 
                     BlockUtils.PutWhichBlockWithAttribute(world, unwaxedBlock, state, pos);
-                    // 粒子效果
-                    if (world instanceof ServerWorld serverWorld) {
-                        serverWorld.spawnParticles(ParticleTypes.WAX_OFF, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 20, 0.4, 0.4, 0.4, 0.0);
-                    }
-                    // 消耗耐久
-                    stack.damage(1, player);
+
+                    UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, ParticleTypes.WAX_OFF, null, null);
                     // 播放剥离音效
                     world.playSound(null, pos, SoundEvents.ITEM_AXE_WAX_OFF, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
@@ -174,19 +223,8 @@ public class Rust implements ModInitializer {
                 Block previousBlock = OxidizeMap.IRONBLOCK_DEOXIDATION_MAP.get(block);
                 if (previousBlock != null) {
                     BlockUtils.PutWhichBlockWithAttribute(world, previousBlock, state, pos);
-                    // 粒子效果
-                    if (world instanceof ServerWorld serverWorld) {
-                        serverWorld.spawnParticles(new DustParticleEffect(0x563E3E, 1.0f), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 20, 0.4, 0.4, 0.4, 0.0);
-                    }
-                    // 掉铁锈
-                    ItemEntity drop = new ItemEntity(
-                            world,
-                            pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                            new ItemStack(Moditems.IRON_RUST, 1)
-                    );
-                    world.spawnEntity(drop);
-                    // 消耗耐久
-                    stack.damage(1, player);
+
+                    UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, new DustParticleEffect(0x563E3E, 1.0f), Moditems.IRON_RUST, 1);
                     // 播放剥离音效
                     world.playSound(null, pos, SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
@@ -203,20 +241,38 @@ public class Rust implements ModInitializer {
                     if (!player.isSneaking()) return ActionResult.PASS;
                 }
 
-                //掉铜锈
-                ItemEntity drop = new ItemEntity(
-                        world,
-                        pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        new ItemStack(Moditems.VERDIGRIS, 1)
-                );
-                world.spawnEntity(drop);
+                UseLater(null, null, null, null, null, (ServerWorld) world, null, pos, null, Moditems.VERDIGRIS, 1);
 
-                // 消耗耐久
-                stack.damage(1, player);
-
-                // 播放剥离音效
-                world.playSound(null, pos, SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
+            return ActionResult.PASS;
+        });
+
+        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (world.isClient) return ActionResult.PASS;
+
+            if (entity.getType() == ModEntity.RUSTY_IRON_GOLEM || entity.getType() == ModEntity.WAXED_IRON_GOLEM || entity.getType() == EntityType.IRON_GOLEM) {
+                ItemStack stack = player.getStackInHand(hand);
+                if(world instanceof ServerWorld serverWorld) {
+                    if (stack.getItem() instanceof HoneycombItem && entity.getType() == EntityType.IRON_GOLEM) {
+                        EntityReplace.ReplaceIronGolemWithAttribute(serverWorld, (IronGolemEntity) entity, false);
+                        UseLater(stack, player, 1, null, hitResult, serverWorld, entity.getPos(), null, ParticleTypes.WAX_ON, null, null);
+                        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_HONEYCOMB_WAX_ON, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        return ActionResult.SUCCESS;
+                    }
+                    if (stack.getItem() instanceof AxeItem && entity.getType() != EntityType.IRON_GOLEM) {
+                        EntityReplace.ReplaceIronGolemWithAttribute(serverWorld, (IronGolemEntity) entity, null);
+                        if (entity.getType() == ModEntity.RUSTY_IRON_GOLEM) {
+                            UseLater(stack, player, 4, null, null, serverWorld, entity.getPos(), null, ParticleTypes.WAX_OFF, Moditems.IRON_RUST, 4);
+                            world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        } else {
+                            UseLater(stack, player, 4, null, null, serverWorld, entity.getPos(), null, ParticleTypes.WAX_OFF, null, null);
+                            world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_AXE_WAX_OFF, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                        }
+                        return ActionResult.SUCCESS;
+                    }
+                }
+            }
+
             return ActionResult.PASS;
         });
 	}

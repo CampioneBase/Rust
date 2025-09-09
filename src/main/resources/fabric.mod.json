@@ -18,6 +18,9 @@
 		"main": [
 			"com.adccadc.rust.Rust"
 		],
+        "client": [
+            "com.adccadc.rust.RustClient"
+        ],
 		"fabric-datagen": [
 			"com.adccadc.rust.RustDataGenerator"
 		]
