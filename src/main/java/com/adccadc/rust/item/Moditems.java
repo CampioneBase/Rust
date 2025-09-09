@@ -1,7 +1,9 @@
 package com.adccadc.rust.item;
 
 import com.adccadc.rust.Rust;
+import com.adccadc.rust.entity.ModEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.EquipmentAsset;
@@ -35,7 +37,7 @@ public class Moditems {
             14,
             Map.of(
                     EquipmentType.HELMET, 1,
-                    EquipmentType.CHESTPLATE, 7,
+                    EquipmentType.CHESTPLATE, 5,
                     EquipmentType.LEGGINGS, 4,
                     EquipmentType.BOOTS, 1
             ), 8,
@@ -48,13 +50,15 @@ public class Moditems {
             16,
             Map.of(
                     EquipmentType.HELMET, 2,
-                    EquipmentType.CHESTPLATE, 8,
-                    EquipmentType.LEGGINGS, 3,
+                    EquipmentType.CHESTPLATE, 6,
+                    EquipmentType.LEGGINGS, 5,
                     EquipmentType.BOOTS, 2
             ), 6,
             SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.25F, 0.025F,
             ItemTags.IRON_TOOL_MATERIALS, WAXED
     );
+    public static final Item RUSTY_IRON_GOLEM_EGG = register("rusty_iron_golem_spawn_egg", RustyIronGolemEgg::new, new Item.Settings());
+    public static final Item WAXED_IRON_GOLEM_EGG = register("waxed_iron_golem_spawn_egg", WaxedIronGolemEgg::new, new Item.Settings());
 
     public static final Item VERDIGRIS = register("verdigris", Item::new, new Item.Settings());
     public static final Item IRON_RUST = register("iron_rust", Item::new, new Item.Settings());
