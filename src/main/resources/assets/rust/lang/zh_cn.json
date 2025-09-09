@@ -108,6 +108,8 @@
   "item.rust.waxed_weathered_soul_lantern": "涂蜡的锈蚀灵魂灯笼",
   "item.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼",
 
+  "item.rust.rusty_iron_golem_spawn_egg": "生锈铁傀儡刷怪蛋",
+  "item.rust.waxed_iron_golem_spawn_egg": "涂蜡铁傀儡刷怪蛋",
 
   "block.rust.exposed_iron_block": "斑驳的铁块",
   "block.rust.weathered_iron_block": "锈蚀的铁块",
@@ -181,11 +183,14 @@
   "block.rust.waxed_weathered_lantern": "涂蜡的锈蚀灯笼",
   "block.rust.waxed_oxidized_lantern": "涂蜡的氧化灯笼",
 
-  "item.rust.exposed_soul_lantern": "斑驳的灵魂灯笼",
-  "item.rust.weathered_soul_lantern": "锈蚀的灵魂灯笼",
-  "item.rust.oxidized_soul_lantern": "氧化的灵魂灯笼",
-  "item.rust.waxed_soul_lantern": "涂蜡的灵魂灯笼",
-  "item.rust.waxed_exposed_soul_lantern": "涂蜡的斑驳灵魂灯笼",
-  "item.rust.waxed_weathered_soul_lantern": "涂蜡的锈蚀灵魂灯笼",
-  "item.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼"
+  "block.rust.exposed_soul_lantern": "斑驳的灵魂灯笼",
+  "block.rust.weathered_soul_lantern": "锈蚀的灵魂灯笼",
+  "block.rust.oxidized_soul_lantern": "氧化的灵魂灯笼",
+  "block.rust.waxed_soul_lantern": "涂蜡的灵魂灯笼",
+  "block.rust.waxed_exposed_soul_lantern": "涂蜡的斑驳灵魂灯笼",
+  "block.rust.waxed_weathered_soul_lantern": "涂蜡的锈蚀灵魂灯笼",
+  "block.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼",
+
+  "entity.rust.rusty_iron_golem": "生锈铁傀儡",
+  "entity.rust.waxed_iron_golem": "涂蜡铁傀儡"
 }

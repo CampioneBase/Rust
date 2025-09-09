@@ -108,6 +108,8 @@
   "item.rust.waxed_weathered_soul_lantern": "Waxed Weathered Soul Lantern",
   "item.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern",
 
+  "item.rust.rusty_iron_golem_spawn_egg": "Rusty Iron Golem Spawn Egg",
+  "item.rust.waxed_iron_golem_spawn_egg": "Waxed Iron Golem Spawn Egg",
 
   "block.rust.exposed_iron_block": "Exposed Iron Block",
   "block.rust.weathered_iron_block": "Weathered Iron Block",
@@ -181,11 +183,14 @@
   "block.rust.waxed_weathered_lantern": "Waxed Weathered Lantern",
   "block.rust.waxed_oxidized_lantern": "Waxed Oxidized Lantern",
 
-  "item.rust.exposed_soul_lantern": "Exposed Soul Lantern",
-  "item.rust.weathered_soul_lantern": "Weathered Soul Lantern",
-  "item.rust.oxidized_soul_lantern": "Oxidized Soul Lantern",
-  "item.rust.waxed_soul_lantern": "Waxed Soul Lantern",
-  "item.rust.waxed_exposed_soul_lantern": "Waxed Exposed Soul Lantern",
-  "item.rust.waxed_weathered_soul_lantern": "Waxed Weathered Soul Lantern",
-  "item.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern"
+  "block.rust.exposed_soul_lantern": "Exposed Soul Lantern",
+  "block.rust.weathered_soul_lantern": "Weathered Soul Lantern",
+  "block.rust.oxidized_soul_lantern": "Oxidized Soul Lantern",
+  "block.rust.waxed_soul_lantern": "Waxed Soul Lantern",
+  "block.rust.waxed_exposed_soul_lantern": "Waxed Exposed Soul Lantern",
+  "block.rust.waxed_weathered_soul_lantern": "Waxed Weathered Soul Lantern",
+  "block.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern",
+
+  "entity.rust.rusty_iron_golem": "Rusty Iron Golem",
+  "entity.rust.waxed_iron_golem": "Waxed Iron Golem"
 }
