@@ -39,9 +39,9 @@ public class Modblocks {
     }
 
     // 铁块系列
-    public static final Block EXPOSED_IRON_BLOCK = register("exposed_iron_block", Block::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
-    public static final Block WEATHERED_IRON_BLOCK = register("weathered_iron_block", Block::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
-    public static final Block OXIDIZED_IRON_BLOCK = register("oxidized_iron_block", Block::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
+    public static final Block EXPOSED_IRON_BLOCK = register("exposed_iron_block", (settings) -> new OxidizableBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
+    public static final Block WEATHERED_IRON_BLOCK = register("weathered_iron_block", (settings) -> new OxidizableBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
+    public static final Block OXIDIZED_IRON_BLOCK = register("oxidized_iron_block", (settings) -> new OxidizableBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
 
     public static final Block WAXED_IRON_BLOCK = register("waxed_iron_block", Block::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
     public static final Block WAXED_EXPOSED_IRON_BLOCK = register("waxed_exposed_iron_block", Block::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
@@ -49,9 +49,9 @@ public class Modblocks {
     public static final Block WAXED_OXIDIZED_IRON_BLOCK = register("waxed_oxidized_iron_block", Block::new, AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), true);
 
     // 铁栏杆系列
-    public static final Block EXPOSED_IRON_BARS = register("exposed_iron_bars", PaneBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
-    public static final Block WEATHERED_IRON_BARS = register("weathered_iron_bars", PaneBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
-    public static final Block OXIDIZED_IRON_BARS = register("oxidized_iron_bars", PaneBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
+    public static final Block EXPOSED_IRON_BARS = register("exposed_iron_bars", (settings) -> new OxidizablePaneBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
+    public static final Block WEATHERED_IRON_BARS = register("weathered_iron_bars", (settings) -> new OxidizablePaneBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
+    public static final Block OXIDIZED_IRON_BARS = register("oxidized_iron_bars", (settings) -> new OxidizablePaneBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
 
     public static final Block WAXED_IRON_BARS = register("waxed_iron_bars", PaneBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
     public static final Block WAXED_EXPOSED_IRON_BARS = register("waxed_exposed_iron_bars", PaneBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
@@ -59,29 +59,29 @@ public class Modblocks {
     public static final Block WAXED_OXIDIZED_IRON_BARS = register("waxed_oxidized_iron_bars", PaneBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_BARS), true);
 
     // 铁活板门系列
-    public static final Block EXPOSED_IRON_TRAPDOOR = register("exposed_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
-    public static final Block WEATHERED_IRON_TRAPDOOR = register("weathered_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
-    public static final Block OXIDIZED_IRON_TRAPDOOR = register("oxidized_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block EXPOSED_IRON_TRAPDOOR = register("exposed_iron_trapdoor", (settings) -> new OxidizableTrapdoorBlock(BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block WEATHERED_IRON_TRAPDOOR = register("weathered_iron_trapdoor", (settings) -> new OxidizableTrapdoorBlock(BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block OXIDIZED_IRON_TRAPDOOR = register("oxidized_iron_trapdoor", (settings) -> new OxidizableTrapdoorBlock(BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
 
-    public static final Block WAXED_IRON_TRAPDOOR = register("waxed_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
-    public static final Block WAXED_EXPOSED_IRON_TRAPDOOR = register("waxed_exposed_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
-    public static final Block WAXED_WEATHERED_IRON_TRAPDOOR = register("waxed_weathered_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
-    public static final Block WAXED_OXIDIZED_IRON_TRAPDOOR = register("waxed_oxidized_iron_trapdoor", CustomTrapdoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block WAXED_IRON_TRAPDOOR = register("waxed_iron_trapdoor", (settings) -> new TrapdoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block WAXED_EXPOSED_IRON_TRAPDOOR = register("waxed_exposed_iron_trapdoor", (settings) -> new TrapdoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block WAXED_WEATHERED_IRON_TRAPDOOR = register("waxed_weathered_iron_trapdoor", (settings) -> new TrapdoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
+    public static final Block WAXED_OXIDIZED_IRON_TRAPDOOR = register("waxed_oxidized_iron_trapdoor", (settings) -> new TrapdoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_TRAPDOOR), true);
 
     // 铁门系列
-    public static final Block EXPOSED_IRON_DOOR = register("exposed_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
-    public static final Block WEATHERED_IRON_DOOR = register("weathered_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
-    public static final Block OXIDIZED_IRON_DOOR = register("oxidized_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block EXPOSED_IRON_DOOR = register("exposed_iron_door", (settings) -> new OxidizableDoorBlock(BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block WEATHERED_IRON_DOOR = register("weathered_iron_door", (settings) -> new OxidizableDoorBlock(BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block OXIDIZED_IRON_DOOR = register("oxidized_iron_door", (settings) -> new OxidizableDoorBlock(BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
 
-    public static final Block WAXED_IRON_DOOR = register("waxed_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
-    public static final Block WAXED_EXPOSED_IRON_DOOR = register("waxed_exposed_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
-    public static final Block WAXED_WEATHERED_IRON_DOOR = register("waxed_weathered_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
-    public static final Block WAXED_OXIDIZED_IRON_DOOR = register("waxed_oxidized_iron_door", CustomDoorBlock::new, AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block WAXED_IRON_DOOR = register("waxed_iron_door", (settings) -> new DoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block WAXED_EXPOSED_IRON_DOOR = register("waxed_exposed_iron_door", (settings) -> new DoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block WAXED_WEATHERED_IRON_DOOR = register("waxed_weathered_iron_door", (settings) -> new DoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
+    public static final Block WAXED_OXIDIZED_IRON_DOOR = register("waxed_oxidized_iron_door", (settings) -> new DoorBlock(BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.IRON_DOOR), true);
 
     // 锁链系列
-    public static final Block EXPOSED_IRON_CHAIN = register("exposed_iron_chain", ChainBlock::new, AbstractBlock.Settings.copy(Blocks.CHAIN), true);
-    public static final Block WEATHERED_IRON_CHAIN = register("weathered_iron_chain", ChainBlock::new, AbstractBlock.Settings.copy(Blocks.CHAIN), true);
-    public static final Block OXIDIZED_IRON_CHAIN = register("oxidized_iron_chain", ChainBlock::new, AbstractBlock.Settings.copy(Blocks.CHAIN), true);
+    public static final Block EXPOSED_IRON_CHAIN = register("exposed_iron_chain", (settings) -> new OxidizableChainBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.CHAIN), true);
+    public static final Block WEATHERED_IRON_CHAIN = register("weathered_iron_chain", (settings) -> new OxidizableChainBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.CHAIN), true);
+    public static final Block OXIDIZED_IRON_CHAIN = register("oxidized_iron_chain", (settings) -> new OxidizableChainBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.CHAIN), true);
 
     public static final Block WAXED_IRON_CHAIN = register("waxed_iron_chain", ChainBlock::new, AbstractBlock.Settings.copy(Blocks.CHAIN), true);
     public static final Block WAXED_EXPOSED_IRON_CHAIN = register("waxed_exposed_iron_chain", ChainBlock::new, AbstractBlock.Settings.copy(Blocks.CHAIN), true);
@@ -113,23 +113,23 @@ public class Modblocks {
     public static final Block WAXED_WATER_OXIDIZED_CAULDRON = register("waxed_oxidized_water_cauldron", CustomWaterCauldronBlock::new, AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), true);*/
 
     // 铁质压力板系列
-    public static final Block EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("exposed_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
-    public static final Block WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("weathered_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
-    public static final Block OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("oxidized_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("exposed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("weathered_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("oxidized_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
 
-    public static final Block WAXED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
-    public static final Block WAXED_EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_exposed_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
-    public static final Block WAXED_WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_weathered_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
-    public static final Block WAXED_OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_oxidized_heavy_weighted_pressure_plate", CustomPlateBlock::new, AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block WAXED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_heavy_weighted_pressure_plate", (settings) -> new WeightedPressurePlateBlock(150, BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block WAXED_EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_exposed_heavy_weighted_pressure_plate", (settings) -> new WeightedPressurePlateBlock(150, BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block WAXED_WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_weathered_heavy_weighted_pressure_plate", (settings) -> new WeightedPressurePlateBlock(150, BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
+    public static final Block WAXED_OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_oxidized_heavy_weighted_pressure_plate", (settings) -> new WeightedPressurePlateBlock(150, BlockSetType.IRON, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), true);
 
     // 铁轨系列 -也不会 注册出来放不了矿车
 
     // 铁砧系列 -也不会 估计和炼药锅bug一样
 
     // 灯笼系列
-    public static final Block EXPOSED_LANTERN = register("exposed_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
-    public static final Block WEATHERED_LANTERN = register("weathered_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
-    public static final Block OXIDIZED_LANTERN = register("oxidized_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
+    public static final Block EXPOSED_LANTERN = register("exposed_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.LANTERN), true);
+    public static final Block WEATHERED_LANTERN = register("weathered_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.LANTERN), true);
+    public static final Block OXIDIZED_LANTERN = register("oxidized_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.LANTERN), true);
 
     public static final Block WAXED_LANTERN = register("waxed_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
     public static final Block WAXED_EXPOSED_LANTERN = register("waxed_exposed_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
@@ -137,9 +137,9 @@ public class Modblocks {
     public static final Block WAXED_OXIDIZED_LANTERN = register("waxed_oxidized_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
 
     // 灵魂灯笼系列
-    public static final Block EXPOSED_SOUL_LANTERN = register("exposed_soul_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
-    public static final Block WEATHERED_SOUL_LANTERN = register("weathered_soul_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
-    public static final Block OXIDIZED_SOUL_LANTERN = register("oxidized_soul_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.LANTERN), true);
+    public static final Block EXPOSED_SOUL_LANTERN = register("exposed_soul_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.LANTERN), true);
+    public static final Block WEATHERED_SOUL_LANTERN = register("weathered_soul_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.LANTERN), true);
+    public static final Block OXIDIZED_SOUL_LANTERN = register("oxidized_soul_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.LANTERN), true);
 
     public static final Block WAXED_SOUL_LANTERN = register("waxed_soul_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.SOUL_LANTERN), true);
     public static final Block WAXED_EXPOSED_SOUL_LANTERN = register("waxed_exposed_soul_lantern", LanternBlock::new, AbstractBlock.Settings.copy(Blocks.SOUL_LANTERN), true);
