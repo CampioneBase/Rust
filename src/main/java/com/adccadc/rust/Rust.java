@@ -145,7 +145,7 @@ public class Rust implements ModInitializer {
 
         // 氧化过程
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (world.getTime() % 60 == 0) { // 5min一次
+            if (world.getTime() % 6000 == 0) { // 5min一次
                 if (world instanceof ServerWorld serverWorld) {
                     for (PlayerEntity player : serverWorld.getPlayers()) {
                         Random random = new Random();
