@@ -103,8 +103,8 @@ public class BlockUtils {
                 .with(ChainBlock.WATERLOGGED, waterlogged), 0);
     }
 
-    // 继承PlateBlock属性 各种压力板
-    public static void PutPlateBlockWithAttribute(World world, Block block, BlockState state, BlockPos pos) {
+    // 继承WeightedPressurePlateBlock属性 各种测重压力板
+    public static void PutWeightedPressurePlateBlockWithAttribute(World world, Block block, BlockState state, BlockPos pos) {
         Integer power = state.get(WeightedPressurePlateBlock.POWER);
 
         world.setBlockState(pos, block.getDefaultState()
@@ -146,7 +146,7 @@ public class BlockUtils {
             case DoorBlock doorBlock -> PutDoorBlockWithAttribute(world, block, state, pos);
             case TrapdoorBlock trapdoorBlock -> PutTrapdoorBlockWithAttribute(world, block, state, pos);
             case ChainBlock chainBlock -> PutChainBlockWithAttribute(world, block, state, pos);
-            case WeightedPressurePlateBlock weightedPressurePlateBlock -> PutPlateBlockWithAttribute(world, block, state, pos);
+            case WeightedPressurePlateBlock weightedPressurePlateBlock -> PutWeightedPressurePlateBlockWithAttribute(world, block, state, pos);
             case LeveledCauldronBlock leveledCauldronBlock -> PutLeveledCauldronBlockWithAttribute(world, block, state, pos);
             case RailBlock railBlock -> PutRailBlockWithAttribute(world, block, state, pos);
             case LanternBlock lanternBlock -> PutLanternBlockWithAttribute(world, block, state, pos);

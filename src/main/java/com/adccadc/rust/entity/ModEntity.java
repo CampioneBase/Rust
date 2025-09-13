@@ -18,7 +18,8 @@ public class ModEntity {
 
     public static final EntityType<IronGolemEntity> RUSTY_IRON_GOLEM = register("rusty_iron_golem", EntityType.Builder.create(IronGolemEntity::new, SpawnGroup.MISC).dimensions(1.4F, 2.7F).maxTrackingRange(8));
     public static final EntityType<IronGolemEntity> WAXED_IRON_GOLEM = register("waxed_iron_golem", EntityType.Builder.create(IronGolemEntity::new, SpawnGroup.MISC).dimensions(1.4F, 2.7F).maxTrackingRange(9));
-
+    //public static final EntityType<MinecartEntity> RUSTY_MINECART = register("rusty_minecart",EntityType.Builder.create(MinecartEntity::new, SpawnGroup.MISC).dropsNothing().dimensions(0.98F, 0.7F).passengerAttachments(0.1875F).maxTrackingRange(8));
+    //public static final EntityType<MinecartEntity> WAXED_MINECART = register("waxed_minecart",EntityType.Builder.create(MinecartEntity::new, SpawnGroup.MISC).dropsNothing().dimensions(0.98F, 0.7F).passengerAttachments(0.1875F).maxTrackingRange(8));
 
     public static void initialize() {
         FabricDefaultAttributeRegistry.register(RUSTY_IRON_GOLEM, IronGolemEntity.createIronGolemAttributes().build());

@@ -20,7 +20,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -146,7 +145,7 @@ public class Rust implements ModInitializer {
 
         // 氧化过程
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (world.getTime() % 6000 == 0) { // 5min一次
+            if (world.getTime() % 60 == 0) { // 5min一次
                 if (world instanceof ServerWorld serverWorld) {
                     for (PlayerEntity player : serverWorld.getPlayers()) {
                         Random random = new Random();
@@ -156,6 +155,7 @@ public class Rust implements ModInitializer {
                                 List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE, Moditems.RUSTY_IRON_HELMET, Moditems.RUSTY_IRON_CHESTPLATE, Moditems.RUSTY_IRON_LEGGINGS, Moditems.RUSTY_IRON_BOOTS),
                                 player);
                         EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
+                        //旧版方块氧化机制
                         for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
                             BlockState state = world.getBlockState(pos);
                             Block block = state.getBlock();
@@ -224,9 +224,9 @@ public class Rust implements ModInitializer {
                 if (previousBlock != null) {
                     BlockUtils.PutWhichBlockWithAttribute(world, previousBlock, state, pos);
 
-                    UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, new DustParticleEffect(0x563E3E, 1.0f), Moditems.IRON_RUST, 1);
+                    UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, null, Moditems.IRON_RUST, 1);
                     // 播放剥离音效
-                    world.playSound(null, pos, SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    //world.playSound(null, pos, SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
                 }
 

@@ -3,7 +3,6 @@ package com.adccadc.rust.block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.block.Oxidizable;
-import net.minecraft.block.PaneBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
