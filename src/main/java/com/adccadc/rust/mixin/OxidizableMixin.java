@@ -7,38 +7,31 @@ import net.minecraft.block.Oxidizable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
 
-@Mixin(value = Oxidizable.class, remap = false)
+@Mixin(value = Oxidizable.class)
 public interface OxidizableMixin {
 
-    @Redirect(
-            method = "getIncreasedOxidationBlock(Lnet/minecraft/block/Block;)Ljava/util/Optional;",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/Optional;ofNullable(Ljava/lang/Object;)Ljava/util/Optional;"
-            ),
-            remap = false
+    @Inject(
+            method = "getIncreasedOxidationBlock",
+            at = @At("HEAD"),
+            cancellable = true
     )
-
-    private static Optional<Block> modifyGetIncreasedOxidationBlock(Object originalValue, Block block) {
-        return Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block));
+    private static void modifyGetIncreasedOxidationBlock(Block block, CallbackInfoReturnable<Optional<Block>> cir) {
+        cir.setReturnValue(Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block)));
+        cir.cancel();
     }
 
-    @Redirect(
-            method = "getDecreasedOxidationBlock(Lnet/minecraft/block/Block;)Ljava/util/Optional;",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/util/Optional;ofNullable(Ljava/lang/Object;)Ljava/util/Optional;"
-            ),
-            remap = false
+    @Inject(
+        method = "getDecreasedOxidationBlock",
+        at = @At("HEAD"),
+        cancellable = true
     )
-
-    private static Optional<Block> modifyGetDecreasedOxidationBlock(Object originalValue, Block block) {
-        return Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block));
+    private static void modifyGetDecreasedOxidationBlock(Block block, CallbackInfoReturnable<Optional<Block>> cir) {
+        cir.setReturnValue(Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block)));
+        cir.cancel();
     }
 
     @Inject(
