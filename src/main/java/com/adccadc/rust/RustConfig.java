@@ -40,11 +40,8 @@ public class RustConfig {
 
             writer.println("# Rust Mod Oxidation Configuration");
             writer.println("#");
-            writer.println("#  - true: 使用旧版Mod氧化逻辑");
             writer.println("#  - true: Use old mod version oxidation logic");
-            writer.println("#  - false: 使用原版氧化逻辑");
             writer.println("#  - false: Use the original oxidation logic");
-            writer.println("#  如果使用旧版逻辑，则每5分钟概率使玩家周围的方块氧化");
             writer.println("#  If using the old logic, there is a probability of oxidizing the blocks around the player every 5 minutes");
             writer.println(USE_LEGACY_KEY + "=false");
 
