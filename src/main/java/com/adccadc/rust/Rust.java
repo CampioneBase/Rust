@@ -91,6 +91,7 @@ public class Rust implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+        RustConfig.loadConfig();
         Moditems.initialize();
         ModItemGroups.register();
         Modblocks.initialize();
@@ -155,15 +156,17 @@ public class Rust implements ModInitializer {
                                 List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE, Moditems.RUSTY_IRON_HELMET, Moditems.RUSTY_IRON_CHESTPLATE, Moditems.RUSTY_IRON_LEGGINGS, Moditems.RUSTY_IRON_BOOTS),
                                 player);
                         EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
-                        //旧版方块氧化机制
-                        for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
-                            BlockState state = world.getBlockState(pos);
-                            Block block = state.getBlock();
-                            Block nextBlock = OxidizeMap.IRONBLOCK_OXIDATION_MAP.get(block);
-                            if (nextBlock != null) {
-                                if (random.nextDouble() > 0.8) {
-                                    BlockUtils.PutWhichBlockWithAttribute(world, nextBlock, state, pos);
-                                    world.updateListeners(pos, state, nextBlock.getDefaultState(), 0);
+                        if(RustConfig.useLegacyOxidizeLogic()) {
+                            //旧版方块氧化机制
+                            for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
+                                BlockState state = world.getBlockState(pos);
+                                Block block = state.getBlock();
+                                Block nextBlock = OxidizeMap.IRONBLOCK_OXIDATION_MAP.get(block);
+                                if (nextBlock != null) {
+                                    if (random.nextDouble() > 0.8) {
+                                        BlockUtils.PutWhichBlockWithAttribute(world, nextBlock, state, pos);
+                                        world.updateListeners(pos, state, nextBlock.getDefaultState(), 0);
+                                    }
                                 }
                             }
                         }

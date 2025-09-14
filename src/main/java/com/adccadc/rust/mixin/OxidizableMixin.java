@@ -1,6 +1,7 @@
 package com.adccadc.rust.mixin;
 
 import com.adccadc.rust.OxidizeMap;
+import com.adccadc.rust.RustConfig;
 import com.google.common.collect.BiMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.Oxidizable;
@@ -20,8 +21,10 @@ public interface OxidizableMixin {
             cancellable = true
     )
     private static void modifyGetIncreasedOxidationBlock(Block block, CallbackInfoReturnable<Optional<Block>> cir) {
-        cir.setReturnValue(Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block)));
-        cir.cancel();
+        if(!RustConfig.useLegacyOxidizeLogic()) {
+            cir.setReturnValue(Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block)));
+            cir.cancel();
+        }
     }
 
     @Inject(
@@ -30,8 +33,10 @@ public interface OxidizableMixin {
         cancellable = true
     )
     private static void modifyGetDecreasedOxidationBlock(Block block, CallbackInfoReturnable<Optional<Block>> cir) {
-        cir.setReturnValue(Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block)));
-        cir.cancel();
+        if(!RustConfig.useLegacyOxidizeLogic()) {
+            cir.setReturnValue(Optional.ofNullable((Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block)));
+            cir.cancel();
+        }
     }
 
     @Inject(
@@ -40,13 +45,15 @@ public interface OxidizableMixin {
             cancellable = true
     )
     private static void modifyGetUnaffectedOxidationBlock(Block block, CallbackInfoReturnable<Block> cir) {
-        Block block2 = block;
+        if (!RustConfig.useLegacyOxidizeLogic()) {
+            Block block2 = block;
 
-        for(Block block3 = (Block)((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block); block3 != null; block3 = (Block)((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block3)) {
-            block2 = block3;
+            for (Block block3 = (Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block); block3 != null; block3 = (Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block3)) {
+                block2 = block3;
+            }
+
+            cir.setReturnValue(block2);
+            cir.cancel();
         }
-
-        cir.setReturnValue(block2);
-        cir.cancel();
     }
 }
