@@ -215,6 +215,11 @@
   "block.rust.waxed_weathered_soul_lantern": "Waxed Weathered Soul Lantern",
   "block.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern",
 
-  "entity.rust.rusty_iron_golem": "Rusty Iron Golem",
-  "entity.rust.waxed_iron_golem": "Waxed Iron Golem"
+  "entity.rust.exposed_iron_golem": "Exposed Iron Golem",
+  "entity.rust.weathered_iron_golem": "Weathered Iron Golem",
+  "entity.rust.oxidized_iron_golem": "Oxidized Iron Golem",
+  "entity.rust.waxed_iron_golem": "Waxed Iron Golem",
+  "entity.rust.waxed_exposed_iron_golem": "Waxed Exposed Iron Golem",
+  "entity.rust.waxed_weathered_iron_golem": "Waxed Weathered Iron Golem",
+  "entity.rust.waxed_oxidized_iron_golem": "Waxed Oxidized Iron Golem"
 }

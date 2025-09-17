@@ -1,13 +1,20 @@
 package com.adccadc.rust;
 
 import java.io.*;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RustConfig {
     private static final String CONFIG_FILE_PATH = "./config/rust.properties";
 
     private static final String USE_LEGACY_KEY = "use_legacy_oxidize_logic";
     private static final String AFFECT_REDSTONE = "affect_redstone";
+    private static final String AFFECT_ENTITY = "effect_entity";
 
     private static final String EXPOSED_WPPB = "exposed_weighted_pressure_plate";
     private static final String WEATHERED_WPPB = "weathered_weighted_pressure_plate";
@@ -17,17 +24,55 @@ public class RustConfig {
     private static final String WAXED_WEATHERED_WPPB = "waxed_weathered_weighted_pressure_plate";
     private static final String WAXED_OXIDIZED_WPPB = "waxed_oxidized_weighted_pressure_plate";
 
+    private static final String EXPOSED_IG = "exposed_iron_golem";
+    private static final String WEATHERED_IG = "weathered_iron_golem";
+    private static final String OXIDIZED_IG = "oxidized_iron_golem";
+    private static final String WAXED_IG = "waxed_iron_golem";
+    private static final String WAXED_EXPOSED_IG = "waxed_exposed_iron_golem";
+    private static final String WAXED_WEATHERED_IG = "waxed_weathered_iron_golem";
+    private static final String WAXED_OXIDIZED_IG = "waxed_oxidized_iron_golem";
+
     private static boolean useLegacyLogic = false; // 是否采用旧版氧化逻辑
+
     private static boolean affectRedstone = true; // 是否影响红石
-    private static Integer exposed_WPPB = 170; // 斑驳的测重压力板每增加一格信号所需实体量
-    private static Integer weathered_WPPB = 190; // 锈蚀的测重压力板每增加一格信号所需实体量
-    private static Integer oxidized_WPPB = 210; // 氧化的测重压力板每增加一格信号所需实体量
-    private static Integer waxed_WPPB = 160; // 涂蜡的测重压力板每增加一格信号所需实体量
-    private static Integer waxed_exposed_WPPB = 180; // 涂蜡的斑驳测重压力板每增加一格信号所需实体量
-    private static Integer waxed_weathered_WPPB = 200; // 涂蜡的锈蚀测重压力板每增加一格信号所需实体量
-    private static Integer waxed_oxidized_WPPB = 220; // 涂蜡的氧化测重压力板每增加一格信号所需实体量
+    // 各种测重压力板每一级信号所需实体重量
+    private static Integer exposed_WPPB = 170;
+    private static Integer weathered_WPPB = 190;
+    private static Integer oxidized_WPPB = 210;
+    private static Integer waxed_WPPB = 160;
+    private static Integer waxed_exposed_WPPB = 180;
+    private static Integer waxed_weathered_WPPB = 200;
+    private static Integer waxed_oxidized_WPPB = 220;
+
+    private static boolean affectEntity = true; // 是否影响实体
+    // 各种铁傀儡的生物属性
+    private static List<?> default_IG = new ArrayList<>(Arrays.asList((double) 100.0F, (double) 0.25F, (double) 1.0F, (double) 15.0F, (double) 1.0F, (double) 16.0F)); //原版铁傀儡属性
+    private static List<?> exposed_IG = new ArrayList<>(Arrays.asList((double) 90.0F, (double) 0.22F, (double) 0.95F, (double) 14.0F, (double) 1.0F, (double) 15.0F));
+    private static List<?> weathered_IG = new ArrayList<>(Arrays.asList((double) 80.0F, (double) 0.19F, (double) 0.90F, (double) 13.0F, (double) 1.0F, (double) 14.0F));
+    private static List<?> oxidized_IG = new ArrayList<>(Arrays.asList((double) 70.0F, (double) 0.16F, (double) 0.85F, (double) 12.0F, (double) 1.0F, (double) 13.0F));
+    private static List<?> waxed_IG = new ArrayList<>(Arrays.asList((double) 110.0F, (double) 0.23F, (double) 1.0F, (double) 14.5F, (double) 0.9F, (double) 16.0F));
+    private static List<?> waxed_exposed_IG = new ArrayList<>(Arrays.asList((double) 100.0F, (double) 0.20F, (double) 0.98F, (double) 13.5F, (double) 0.9F, (double) 15.0F));
+    private static List<?> waxed_weathered_IG = new ArrayList<>(Arrays.asList((double) 90.0F, (double) 0.17F, (double) 0.93F, (double) 12.5F, (double) 0.9F, (double) 14.0F));
+    private static List<?> waxed_oxidized_IG = new ArrayList<>(Arrays.asList((double) 80.0F, (double) 0.14F, (double) 0.88F, (double) 11.5F, (double) 0.9F, (double) 13.0F));
 
     private RustConfig() {}
+
+    protected static List<Double> convertWithRegex(String input) {
+        List<Double> result = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("\\d+(?:\\.\\d+)?(?:F|f)?");
+        Matcher matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            String match = matcher.group();
+
+            if (match.toUpperCase().endsWith("F")) {
+                match = match.substring(0, match.length() - 1);
+            }
+            result.add(Double.parseDouble(match));
+        }
+        return result;
+    }
 
     public static void loadConfig() {
         File configFile = new File(CONFIG_FILE_PATH);
@@ -41,7 +86,8 @@ public class RustConfig {
         try (InputStream input = new FileInputStream(configFile)) {
             props.load(input);
             useLegacyLogic = Boolean.parseBoolean(props.getProperty(USE_LEGACY_KEY, "false").trim());
-            affectRedstone = Boolean.parseBoolean(props.getProperty(AFFECT_REDSTONE, "false").trim());
+            affectRedstone = Boolean.parseBoolean(props.getProperty(AFFECT_REDSTONE, "true").trim());
+            affectEntity = Boolean.parseBoolean(props.getProperty(AFFECT_ENTITY, "true"));
             exposed_WPPB = Integer.parseUnsignedInt(props.getProperty(EXPOSED_WPPB, "150").trim());
             weathered_WPPB = Integer.parseUnsignedInt(props.getProperty(WEATHERED_WPPB, "150").trim());
             oxidized_WPPB = Integer.parseUnsignedInt(props.getProperty(OXIDIZED_WPPB, "150").trim());
@@ -49,7 +95,16 @@ public class RustConfig {
             waxed_exposed_WPPB = Integer.parseUnsignedInt(props.getProperty(WAXED_EXPOSED_WPPB, "150").trim());
             waxed_weathered_WPPB = Integer.parseUnsignedInt(props.getProperty(WAXED_WEATHERED_WPPB, "150").trim());
             waxed_oxidized_WPPB = Integer.parseUnsignedInt(props.getProperty(WAXED_OXIDIZED_WPPB, "150").trim());
-            System.out.println("Loaded oxidize config: use_legacy_logic = " + useLegacyLogic);
+            exposed_IG = convertWithRegex(props.getProperty(EXPOSED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            weathered_IG = convertWithRegex(props.getProperty(WEATHERED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            oxidized_IG = convertWithRegex(props.getProperty(OXIDIZED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            waxed_IG = convertWithRegex(props.getProperty(WAXED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]"));
+            waxed_exposed_IG = convertWithRegex(props.getProperty(WAXED_EXPOSED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            waxed_weathered_IG = convertWithRegex(props.getProperty(WAXED_WEATHERED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            waxed_oxidized_IG = convertWithRegex(props.getProperty(WAXED_OXIDIZED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            System.out.println("Loaded rust config: use_legacy_logic = " + useLegacyLogic);
+            System.out.println("Loaded rust config: affect_redstone = " + affectRedstone);
+            System.out.println("Loaded rust config: affect_entity = " + affectEntity);
         } catch (IOException e) {
             System.err.println("Failed to load config file, using default settings: " + e.getMessage());
             createDefaultConfig(configFile);
@@ -77,7 +132,7 @@ public class RustConfig {
             writer.println("#  if the value is false, rust will not use subsequent config, use original block state and logic");
             writer.println(AFFECT_REDSTONE + "= true");
             writer.println();
-            writer.println("#  - number");
+            writer.println("#  - number(int)");
             writer.println("#  How much weight is required for each level of signal (original version is 150)");
             writer.println(EXPOSED_WPPB + "= 170");
             writer.println(WEATHERED_WPPB + "= 190");
@@ -86,6 +141,22 @@ public class RustConfig {
             writer.println(WAXED_EXPOSED_WPPB + "= 180");
             writer.println(WAXED_WEATHERED_WPPB + "= 200");
             writer.println(WAXED_OXIDIZED_WPPB + "= 220");
+            writer.println();
+            writer.println("#  - true: Rust can affect entity");
+            writer.println("#  - false: Rust can't affect entity");
+            writer.println("#  if the value is false, rust will not use subsequent config, use original entity attributes");
+            writer.println(AFFECT_ENTITY + "= true");
+            writer.println();
+            writer.println("#  - [decimal(float),decimal(float),decimal(float),decimal(float),decimal(float),decimal(float)]");
+            writer.println("#  - [max health,movement speed,knockback resistance,attack damage,step height,follow range] *Please add F at the end of each float value");
+            writer.println("#  This will change the attributes of the golem, some of which may not be effective for existing golem");
+            writer.println(EXPOSED_IG + "= [90.0F,0.22F,0.95F,14.0F,1.0F,15.0F]");
+            writer.println(WEATHERED_IG + "= [80.0F,0.19F,0.90F,13.0F,1.0F,14.0F]");
+            writer.println(OXIDIZED_IG + "= [70.0F,0.16F,0.85F,12.0F,1.0F,13.0F]");
+            writer.println(WAXED_IG + "= [110.0F,0.23F,1.0F,14.5F,0.9F,16.0F]");
+            writer.println(WAXED_EXPOSED_IG + "= [100.0F,0.20F,0.98F,13.5F,0.9F,15.0F]");
+            writer.println(WAXED_WEATHERED_IG + "= [90.0F,0.17F,0.93F,12.5F,0.9F,14.0F]");
+            writer.println(WAXED_OXIDIZED_IG + "= [80.0F,0.16F,0.88F,11.5F,0.9F,13.0F]");
 
             System.out.println("Created default config file: " + configFile.getAbsolutePath());
             System.out.println("Please edit the file and restart Minecraft to apply changes.");
@@ -104,4 +175,12 @@ public class RustConfig {
     public static Integer getWaxed_exposed_WPPB() {return affectRedstone ? waxed_exposed_WPPB : 150;}
     public static Integer getWaxed_weathered_WPPB() {return affectRedstone ? waxed_weathered_WPPB : 150;}
     public static Integer getWaxed_oxidized_WPPB() {return affectRedstone ? waxed_oxidized_WPPB : 150;}
+
+    public static List<?> getExposed_IG() {return affectEntity ? exposed_IG : default_IG;}
+    public static List<?> getWeathered_IG() {return affectEntity ? weathered_IG : default_IG;}
+    public static List<?> getOxidized_IG() {return affectEntity ? oxidized_IG : default_IG;}
+    public static List<?> getWaxed_IG() {return affectEntity ? waxed_IG : default_IG;}
+    public static List<?> getWaxed_exposed_IG() {return affectEntity ? waxed_exposed_IG : default_IG;}
+    public static List<?> getWaxed_weathered_IG() {return affectEntity ? waxed_weathered_IG : default_IG;}
+    public static List<?> getWaxed_oxidized_IG() {return affectEntity ? waxed_oxidized_IG : default_IG;}
 }

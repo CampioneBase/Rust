@@ -1,4 +1,4 @@
-package com.adccadc.rust.entity;
+package com.adccadc.rust.entity.GolemEntityRenderer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,10 +15,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
 @Environment(EnvType.CLIENT)
-public class RustyIronGolemEntityRenderer extends MobEntityRenderer<IronGolemEntity, IronGolemEntityRenderState, IronGolemEntityModel> {
-    private static final Identifier TEXTURE = Identifier.of("rust", "textures/entity/rusty_iron_golem.png");
+public class WeatheredIronGolemEntityRenderer extends MobEntityRenderer<IronGolemEntity, IronGolemEntityRenderState, IronGolemEntityModel> {
+    private static final Identifier TEXTURE = Identifier.of("rust", "textures/entity/weathered_iron_golem.png");
 
-    public RustyIronGolemEntityRenderer(EntityRendererFactory.Context context) {
+    public WeatheredIronGolemEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new IronGolemEntityModel(context.getPart(EntityModelLayers.IRON_GOLEM)), 0.7F);
         this.addFeature(new IronGolemCrackFeatureRenderer(this));
         this.addFeature(new IronGolemFlowerFeatureRenderer(this, context.getBlockRenderManager()));

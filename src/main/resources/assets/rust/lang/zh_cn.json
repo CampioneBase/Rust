@@ -215,6 +215,11 @@
   "block.rust.waxed_weathered_soul_lantern": "涂蜡的锈蚀灵魂灯笼",
   "block.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼",
 
-  "entity.rust.rusty_iron_golem": "生锈铁傀儡",
-  "entity.rust.waxed_iron_golem": "涂蜡铁傀儡"
+  "entity.rust.exposed_iron_golem": "斑驳的铁傀儡",
+  "entity.rust.weathered_iron_golem": "锈蚀的铁傀儡",
+  "entity.rust.oxidized_iron_golem": "氧化的铁傀儡",
+  "entity.rust.waxed_iron_golem": "涂蜡的铁傀儡",
+  "entity.rust.waxed_exposed_iron_golem": "涂蜡的斑驳铁傀儡",
+  "entity.rust.waxed_weathered_iron_golem": "涂蜡的锈蚀铁傀儡",
+  "entity.rust.waxed_oxidized_iron_golem": "涂蜡的氧化铁傀儡"
 }

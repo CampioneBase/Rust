@@ -17,7 +17,7 @@ public class EntityReplace {
         if (isRusty == null) {
             ChangedIronGolem = EntityType.IRON_GOLEM.create(serverWorld,CONVERSION);
         } else if (isRusty) {
-            ChangedIronGolem = ModEntity.RUSTY_IRON_GOLEM.create(serverWorld,CONVERSION);
+            ChangedIronGolem = ModEntity.EXPOSED_IRON_GOLEM.create(serverWorld,CONVERSION);
         } else {
             ChangedIronGolem = ModEntity.WAXED_IRON_GOLEM.create(serverWorld,CONVERSION);
         }

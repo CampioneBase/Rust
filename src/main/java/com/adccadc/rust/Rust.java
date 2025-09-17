@@ -155,7 +155,7 @@ public class Rust implements ModInitializer {
                                 List.of(Items.IRON_SWORD, Items.IRON_AXE, Items.IRON_PICKAXE, Items.IRON_SHOVEL, Items.IRON_HOE, Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS),
                                 List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE, Moditems.RUSTY_IRON_HELMET, Moditems.RUSTY_IRON_CHESTPLATE, Moditems.RUSTY_IRON_LEGGINGS, Moditems.RUSTY_IRON_BOOTS),
                                 player);
-                        EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
+                        //EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
                         if(RustConfig.useLegacyOxidizeLogic()) {
                             // 旧版方块氧化机制
                             for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
@@ -244,11 +244,11 @@ public class Rust implements ModInitializer {
             }
             return ActionResult.PASS;
         });
-
+/*
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             if (world.isClient) return ActionResult.PASS;
 
-            if (entity.getType() == ModEntity.RUSTY_IRON_GOLEM || entity.getType() == ModEntity.WAXED_IRON_GOLEM || entity.getType() == EntityType.IRON_GOLEM) {
+            if (entity.getType() == ModEntity.EXPOSED_IRON_GOLEM || entity.getType() == ModEntity.WAXED_IRON_GOLEM || entity.getType() == EntityType.IRON_GOLEM) {
                 ItemStack stack = player.getStackInHand(hand);
                 if(world instanceof ServerWorld serverWorld) {
                     if (stack.getItem() instanceof HoneycombItem && entity.getType() == EntityType.IRON_GOLEM) {
@@ -259,7 +259,7 @@ public class Rust implements ModInitializer {
                     }
                     if (stack.getItem() instanceof AxeItem && entity.getType() != EntityType.IRON_GOLEM) {
                         EntityReplace.ReplaceIronGolemWithAttribute(serverWorld, (IronGolemEntity) entity, null);
-                        if (entity.getType() == ModEntity.RUSTY_IRON_GOLEM) {
+                        if (entity.getType() == ModEntity.EXPOSED_IRON_GOLEM) {
                             UseLater(stack, player, 4, null, null, serverWorld, entity.getPos(), null, ParticleTypes.WAX_OFF, Moditems.IRON_RUST, 4);
                             world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.PLAYERS, 1.0F, 1.0F);
                         } else {
@@ -273,5 +273,6 @@ public class Rust implements ModInitializer {
 
             return ActionResult.PASS;
         });
+*/
 	}
 }
