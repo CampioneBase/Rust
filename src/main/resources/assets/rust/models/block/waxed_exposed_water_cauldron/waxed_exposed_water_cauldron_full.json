@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/template_cauldron_full",
+  "textures": {
+    "bottom": "rust:block/waxed_exposed_cauldron_bottom",
+    "content": "minecraft:block/water_still",
+    "inside": "rust:block/waxed_exposed_cauldron_inner",
+    "particle": "rust:block/waxed_exposed_cauldron_side",
+    "side": "rust:block/waxed_exposed_cauldron_side",
+    "top": "rust:block/waxed_exposed_cauldron_top"
+  }
+}

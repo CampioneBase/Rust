@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/template_cauldron_level2",
+  "textures": {
+    "bottom": "rust:block/exposed_cauldron_bottom",
+    "content": "minecraft:block/water_still",
+    "inside": "rust:block/exposed_cauldron_inner",
+    "particle": "rust:block/exposed_cauldron_side",
+    "side": "rust:block/exposed_cauldron_side",
+    "top": "rust:block/exposed_cauldron_top"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/template_cauldron_level1",
+  "textures": {
+    "bottom": "rust:block/oxidized_cauldron_bottom",
+    "content": "minecraft:block/powder_snow",
+    "inside": "rust:block/oxidized_cauldron_inner",
+    "particle": "rust:block/oxidized_cauldron_side",
+    "side": "rust:block/oxidized_cauldron_side",
+    "top": "rust:block/oxidized_cauldron_top"
+  }
+}

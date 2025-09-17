@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "rust:block/waxed_exposed_lava_cauldron"
+    }
+  }
+}

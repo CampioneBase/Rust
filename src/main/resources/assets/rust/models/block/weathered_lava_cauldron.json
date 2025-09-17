@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/template_cauldron_full",
+  "textures": {
+    "bottom": "rust:block/weathered_cauldron_bottom",
+    "content": "minecraft:block/lava_still",
+    "inside": "rust:block/weathered_cauldron_inner",
+    "particle": "rust:block/weathered_cauldron_side",
+    "side": "rust:block/weathered_cauldron_side",
+    "top": "rust:block/weathered_cauldron_top"
+  }
+}
