@@ -1,30 +1,18 @@
 package com.adccadc.rust.block;
 
-import com.adccadc.rust.OxidizeMap;
-import com.google.common.base.Suppliers;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CauldronBlock;
+import net.minecraft.block.Oxidizable;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.event.GameEvent;
-
-import java.util.function.Supplier;
 
 public class OxidizableCauldronBlock extends CauldronBlock implements Oxidizable {
     private final OxidationLevel oxidationLevel;

@@ -1,18 +1,13 @@
 package com.adccadc.rust;
 
 import com.adccadc.rust.block.Modblocks;
-import com.adccadc.rust.block.OxidizableCauldronBlock;
-import com.adccadc.rust.block.OxidizableLavaCauldronBlock;
-import com.adccadc.rust.block.OxidizableLeveledCauldronBlock;
 import com.adccadc.rust.effect.ModEffects;
 import com.adccadc.rust.entity.EntityReplace;
 import com.adccadc.rust.entity.ModEntity;
 import com.adccadc.rust.item.ItemReplace;
 import com.adccadc.rust.item.ModItemGroups;
 import com.adccadc.rust.item.Moditems;
-import com.google.common.base.Suppliers;
 import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -25,7 +20,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -42,10 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.Supplier;
 
 public class Rust implements ModInitializer {
 	public static final String MOD_ID = "rust";

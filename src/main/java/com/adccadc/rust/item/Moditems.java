@@ -4,7 +4,6 @@ import com.adccadc.rust.Rust;
 import com.adccadc.rust.block.Modblocks;
 import com.adccadc.rust.entity.ModEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.EquipmentAsset;

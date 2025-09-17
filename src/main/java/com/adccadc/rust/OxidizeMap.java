@@ -7,8 +7,6 @@ import com.google.common.collect.ImmutableBiMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class OxidizeMap {

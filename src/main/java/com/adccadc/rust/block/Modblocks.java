@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
-import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.registry.Registries;
