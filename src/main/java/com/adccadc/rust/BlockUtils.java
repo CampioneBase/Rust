@@ -111,7 +111,7 @@ public class BlockUtils {
                 .with(WeightedPressurePlateBlock.POWER, power), 0);
     }
 
-    // 继承LeveledCauldronBlock属性 各种含内容炼药锅
+    // 继承LeveledCauldronBlock属性 各种含内容炼药锅（除含熔岩）
     public static void PutLeveledCauldronBlockWithAttribute(World world, Block block, BlockState state, BlockPos pos) {
         Integer level = state.get(LeveledCauldronBlock.LEVEL);
 

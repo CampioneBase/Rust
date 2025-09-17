@@ -1,12 +1,18 @@
 package com.adccadc.rust;
 
 import com.adccadc.rust.block.Modblocks;
+import com.adccadc.rust.block.OxidizableCauldronBlock;
+import com.adccadc.rust.block.OxidizableLavaCauldronBlock;
+import com.adccadc.rust.block.OxidizableLeveledCauldronBlock;
 import com.adccadc.rust.effect.ModEffects;
 import com.adccadc.rust.entity.EntityReplace;
 import com.adccadc.rust.entity.ModEntity;
 import com.adccadc.rust.item.ItemReplace;
 import com.adccadc.rust.item.ModItemGroups;
 import com.adccadc.rust.item.Moditems;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -19,6 +25,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -38,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class Rust implements ModInitializer {
 	public static final String MOD_ID = "rust";
@@ -157,15 +165,15 @@ public class Rust implements ModInitializer {
                                 player);
                         EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
                         if(RustConfig.useLegacyOxidizeLogic()) {
-                            //旧版方块氧化机制
+                            // 旧版方块氧化机制
                             for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
                                 BlockState state = world.getBlockState(pos);
                                 Block block = state.getBlock();
-                                Block nextBlock = OxidizeMap.IRONBLOCK_OXIDATION_MAP.get(block);
-                                if (nextBlock != null) {
+                                Block increasesBlock = (Block)((BiMap)OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block);
+                                if (increasesBlock != null) {
                                     if (random.nextDouble() > 0.8) {
-                                        BlockUtils.PutWhichBlockWithAttribute(world, nextBlock, state, pos);
-                                        world.updateListeners(pos, state, nextBlock.getDefaultState(), 0);
+                                        BlockUtils.PutWhichBlockWithAttribute(world, increasesBlock, state, pos);
+                                        world.updateListeners(pos, state, increasesBlock.getDefaultState(), 0);
                                     }
                                 }
                             }
@@ -186,19 +194,13 @@ public class Rust implements ModInitializer {
                 BlockState state = world.getBlockState(pos);
                 Block block = state.getBlock();
 
-                Map<Block, Block> waxableBlocks = HoneyMap.getWaxableBlocks();
+                Block increasesBlock = (Block)((BiMap)HoneyMap.MOD_WAXING_LEVEL_INCREASES.get()).get(block);
+
                 // 涂蜡
-                if (waxableBlocks.containsKey(block)) {
-                    Block waxedBlock = waxableBlocks.get(block);
-                    if (HoneyMap.WAXED_BLOCKS.contains(block)) {
-                        return ActionResult.PASS;
-                    }
+                if (increasesBlock != null) {
+                    BlockUtils.PutWhichBlockWithAttribute(world, increasesBlock, state, pos);
 
-                    BlockUtils.PutWhichBlockWithAttribute(world, waxedBlock, state, pos);
-
-                    if (world instanceof ServerWorld) {
-                        UseLater(stack, player, 1, hitResult, null, (ServerWorld) world, null, pos, ParticleTypes.WAX_ON, null, null);
-                    }
+                    UseLater(stack, player, 1, hitResult, null, (ServerWorld) world, null, pos, ParticleTypes.WAX_ON, null, null);
                     // 播放涂蜡音效
                     world.playSound(null, pos, SoundEvents.ITEM_HONEYCOMB_WAX_ON, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
@@ -210,11 +212,12 @@ public class Rust implements ModInitializer {
                 BlockPos pos = hitResult.getBlockPos();
                 BlockState state = world.getBlockState(pos);
                 Block block = state.getBlock();
-                // 除蜡
-                if (HoneyMap.UNWAXABLE_BLOCKS.containsKey(block)) {
-                    Block unwaxedBlock = HoneyMap.UNWAXABLE_BLOCKS.get(block);
 
-                    BlockUtils.PutWhichBlockWithAttribute(world, unwaxedBlock, state, pos);
+                Block decreasesBlock = (Block)((BiMap)HoneyMap.MOD_WAXING_LEVEL_DECREASES.get()).get(block);
+                // 除蜡
+                if (decreasesBlock != null) {
+
+                    BlockUtils.PutWhichBlockWithAttribute(world, decreasesBlock, state, pos);
 
                     UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, ParticleTypes.WAX_OFF, null, null);
                     // 播放剥离音效
@@ -223,9 +226,9 @@ public class Rust implements ModInitializer {
                 }
 
                 // 铁质方块除锈
-                Block previousBlock = OxidizeMap.IRONBLOCK_DEOXIDATION_MAP.get(block);
-                if (previousBlock != null) {
-                    BlockUtils.PutWhichBlockWithAttribute(world, previousBlock, state, pos);
+                decreasesBlock = (Block)((BiMap)OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block);
+                if (decreasesBlock != null) {
+                    BlockUtils.PutWhichBlockWithAttribute(world, decreasesBlock, state, pos);
 
                     UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, null, Moditems.IRON_RUST, 1);
                     // 播放剥离音效

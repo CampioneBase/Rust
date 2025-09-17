@@ -3,6 +3,8 @@ package com.adccadc.rust.item;
 import com.adccadc.rust.Rust;
 import com.adccadc.rust.block.Modblocks;
 import com.adccadc.rust.entity.ModEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.EquipmentAsset;
@@ -18,6 +20,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Moditems {
@@ -96,14 +99,6 @@ public class Moditems {
     public static final Item WAXED_WEATHERED_IRON_CHAIN = register("waxed_weathered_iron_chain", (settings) -> new BlockItem(Modblocks.WAXED_WEATHERED_IRON_CHAIN, settings), new Item.Settings());
     public static final Item WAXED_OXIDIZED_IRON_CHAIN = register("waxed_oxidized_iron_chain", (settings) -> new BlockItem(Modblocks.WAXED_OXIDIZED_IRON_CHAIN, settings), new Item.Settings());
 
-    public static final Item EXPOSED_CAULDRON = register("exposed_cauldron", (settings) -> new BlockItem(Modblocks.EXPOSED_CAULDRON, settings), new Item.Settings());
-    public static final Item WEATHERED_CAULDRON = register("weathered_cauldron", (settings) -> new BlockItem(Modblocks.WEATHERED_CAULDRON, settings), new Item.Settings());
-    public static final Item OXIDIZED_CAULDRON = register("oxidized_cauldron", (settings) -> new BlockItem(Modblocks.OXIDIZED_CAULDRON, settings), new Item.Settings());
-    public static final Item WAXED_CAULDRON = register("waxed_cauldron", (settings) -> new BlockItem(Modblocks.WAXED_CAULDRON, settings), new Item.Settings());
-    public static final Item WAXED_EXPOSED_CAULDRON = register("waxed_exposed_cauldron", (settings) -> new BlockItem(Modblocks.WAXED_EXPOSED_CAULDRON, settings), new Item.Settings());
-    public static final Item WAXED_WEATHERED_CAULDRON = register("waxed_weathered_cauldron", (settings) -> new BlockItem(Modblocks.WAXED_WEATHERED_CAULDRON, settings), new Item.Settings());
-    public static final Item WAXED_OXIDIZED_CAULDRON = register("waxed_oxidized_cauldron", (settings) -> new BlockItem(Modblocks.WAXED_OXIDIZED_CAULDRON, settings), new Item.Settings());
-
     public static final Item EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("exposed_heavy_weighted_pressure_plate", (settings) -> new BlockItem(Modblocks.EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE, settings), new Item.Settings());
     public static final Item WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("weathered_heavy_weighted_pressure_plate", (settings) -> new BlockItem(Modblocks.WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE, settings), new Item.Settings());
     public static final Item OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("oxidized_heavy_weighted_pressure_plate", (settings) -> new BlockItem(Modblocks.OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE, settings), new Item.Settings());
@@ -160,6 +155,59 @@ public class Moditems {
 
     public static final Item RUSTY_IRON_BOOTS = register("rusty_iron_boots", Item::new, new Item.Settings().armor(ARMOR_IRON_CORROSION, EquipmentType.BOOTS).maxDamage(EquipmentType.BOOTS.getMaxDamage(14)));
     public static final Item WAXED_IRON_BOOTS = register("waxed_iron_boots", Item::new, new Item.Settings().armor(ARMOR_IRON_WAXED, EquipmentType.BOOTS).maxDamage(EquipmentType.BOOTS.getMaxDamage(16)));
+
+    private static RegistryKey<Item> keyOf(RegistryKey<Block> blockKey) {
+        return RegistryKey.of(RegistryKeys.ITEM, blockKey.getValue());
+    }
+
+    public static Item register(Block block, BiFunction<Block, Item.Settings, Item> factory, Item.Settings settings) {
+        return register((RegistryKey)keyOf(block.getRegistryEntry().registryKey()), (Function)((itemSettings) -> (Item)factory.apply(block, (Item.Settings) itemSettings)), settings.useBlockPrefixedTranslationKey());
+    }
+
+    public static Item register(Block block, BiFunction<Block, Item.Settings, Item> factory) {
+        return register(block, factory, new Item.Settings());
+    }
+
+    public static Item register(Block block) {
+        return register(block, BlockItem::new);
+    }
+
+    public static Item register(Block block, Block... blocks) {
+        Item item = register(block);
+
+        for(Block block2 : blocks) {
+            Item.BLOCK_ITEMS.put(block2, item);
+        }
+
+        return item;
+    }
+
+    public static Item register(RegistryKey<Item> key, Function<Item.Settings, Item> factory, Item.Settings settings) {
+        Item item = (Item)factory.apply(settings.registryKey(key));
+        if (item instanceof BlockItem blockItem) {
+            blockItem.appendBlocks(Item.BLOCK_ITEMS, item);
+        }
+
+        return (Item)Registry.register(Registries.ITEM, key, item);
+    }
+
+    public static final Item EXPOSED_CAULDRON;
+    public static final Item WEATHERED_CAULDRON;
+    public static final Item OXIDIZED_CAULDRON;
+    public static final Item WAXED_CAULDRON;
+    public static final Item WAXED_EXPOSED_CAULDRON;
+    public static final Item WAXED_WEATHERED_CAULDRON;
+    public static final Item WAXED_OXIDIZED_CAULDRON;
+
+    static {
+        EXPOSED_CAULDRON = register(Modblocks.EXPOSED_CAULDRON, Modblocks.EXPOSED_WATER_CAULDRON, Modblocks.EXPOSED_LAVA_CAULDRON, Modblocks.EXPOSED_POWDER_SNOW_CAULDRON);
+        WEATHERED_CAULDRON = register(Modblocks.WEATHERED_CAULDRON, Modblocks.WEATHERED_WATER_CAULDRON, Modblocks.WEATHERED_LAVA_CAULDRON, Modblocks.WEATHERED_POWDER_SNOW_CAULDRON);
+        OXIDIZED_CAULDRON = register(Modblocks.OXIDIZED_CAULDRON, Modblocks.OXIDIZED_WATER_CAULDRON, Modblocks.OXIDIZED_LAVA_CAULDRON, Modblocks.OXIDIZED_POWDER_SNOW_CAULDRON);
+        WAXED_CAULDRON = register(Modblocks.WAXED_CAULDRON, Modblocks.WAXED_WATER_CAULDRON, Modblocks.WAXED_LAVA_CAULDRON, Modblocks.WAXED_POWDER_SNOW_CAULDRON);
+        WAXED_EXPOSED_CAULDRON = register(Modblocks.WAXED_EXPOSED_CAULDRON, Modblocks.WAXED_EXPOSED_WATER_CAULDRON, Modblocks.WAXED_EXPOSED_LAVA_CAULDRON, Modblocks.WAXED_EXPOSED_POWDER_SNOW_CAULDRON);
+        WAXED_WEATHERED_CAULDRON = register(Modblocks.WAXED_WEATHERED_CAULDRON, Modblocks.WAXED_WEATHERED_WATER_CAULDRON, Modblocks.WAXED_WEATHERED_LAVA_CAULDRON, Modblocks.WAXED_WEATHERED_POWDER_SNOW_CAULDRON);
+        WAXED_OXIDIZED_CAULDRON = register(Modblocks.WAXED_OXIDIZED_CAULDRON, Modblocks.WAXED_OXIDIZED_WATER_CAULDRON, Modblocks.WAXED_OXIDIZED_LAVA_CAULDRON, Modblocks.WAXED_OXIDIZED_POWDER_SNOW_CAULDRON);
+    }
 
     public static void initialize() {
     }

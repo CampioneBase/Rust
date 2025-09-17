@@ -5,7 +5,8 @@
   "mixins": [
     "BlocksMixin",
     "ExampleMixin",
-    "OxidizableMixin"
+    "OxidizableMixin",
+    "CauldronBehaviorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

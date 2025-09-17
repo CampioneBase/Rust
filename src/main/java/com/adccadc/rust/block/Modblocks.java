@@ -1,13 +1,19 @@
 package com.adccadc.rust.block;
 
+import com.adccadc.rust.RustConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.block.*;
+import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.client.color.block.BlockColorProvider;
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 
 import java.util.function.Function;
 
@@ -81,7 +87,7 @@ public class Modblocks {
 
     // 活塞系列 -材质改和没改差不多 不打算实现
 
-    // 炼药锅系列
+    // 空炼药锅系列
     public static final Block EXPOSED_CAULDRON = register("exposed_cauldron", (settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.CAULDRON), null);
     public static final Block WEATHERED_CAULDRON = register("weathered_cauldron", (settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.CAULDRON), null);
     public static final Block OXIDIZED_CAULDRON = register("oxidized_cauldron", (settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.CAULDRON), null);
@@ -90,26 +96,46 @@ public class Modblocks {
     public static final Block WAXED_EXPOSED_CAULDRON = register("waxed_exposed_cauldron", (settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.CAULDRON), null);
     public static final Block WAXED_WEATHERED_CAULDRON = register("waxed_weathered_cauldron", (settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.CAULDRON), null);
     public static final Block WAXED_OXIDIZED_CAULDRON = register("waxed_oxidized_cauldron", (settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.CAULDRON), null);
-/*
-    // 含水炼药锅系列 -能力不足 放弃实现
-    public static final Block EXPOSED_WATER_CAULDRON = register("exposed_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
-    public static final Block WEATHERED_WATER_CAULDRON = register("weathered_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
-    public static final Block OXIDIZED_WATER_CAULDRON = register("oxidized_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
 
-    public static final Block WAXED_WATER_CAULDRON = register("waxed_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.UNAFFECTED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
-    public static final Block WAXED_WATER_EXPOSED_CAULDRON = register("waxed_exposed_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
-    public static final Block WAXED_WATER_WEATHERED_CAULDRON = register("waxed_weathered_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
-    public static final Block WAXED_WATER_OXIDIZED_CAULDRON = register("waxed_oxidized_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON));
-*/
+    // 含水炼药锅系列
+    public static final Block EXPOSED_WATER_CAULDRON = register("exposed_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+    public static final Block WEATHERED_WATER_CAULDRON = register("weathered_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+    public static final Block OXIDIZED_WATER_CAULDRON = register("oxidized_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+
+    public static final Block WAXED_WATER_CAULDRON = register("waxed_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.UNAFFECTED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+    public static final Block WAXED_EXPOSED_WATER_CAULDRON = register("waxed_exposed_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+    public static final Block WAXED_WEATHERED_WATER_CAULDRON = register("waxed_weathered_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+    public static final Block WAXED_OXIDIZED_WATER_CAULDRON = register("waxed_oxidized_water_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.WATER_CAULDRON), null);
+
+    // 含熔岩炼药锅系列
+    public static final Block EXPOSED_LAVA_CAULDRON = register("exposed_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+    public static final Block WEATHERED_LAVA_CAULDRON = register("weathered_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+    public static final Block OXIDIZED_LAVA_CAULDRON = register("oxidized_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+
+    public static final Block WAXED_LAVA_CAULDRON = register("waxed_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.UNAFFECTED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+    public static final Block WAXED_EXPOSED_LAVA_CAULDRON = register("waxed_exposed_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+    public static final Block WAXED_WEATHERED_LAVA_CAULDRON = register("waxed_weathered_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+    public static final Block WAXED_OXIDIZED_LAVA_CAULDRON = register("waxed_oxidized_lava_cauldron", (settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.LAVA_CAULDRON), null);
+
+    // 含雪炼药锅系列
+    public static final Block EXPOSED_POWDER_SNOW_CAULDRON = register("exposed_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+    public static final Block WEATHERED_POWDER_SNOW_CAULDRON = register("weathered_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+    public static final Block OXIDIZED_POWDER_SNOW_CAULDRON = register("oxidized_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+
+    public static final Block WAXED_POWDER_SNOW_CAULDRON = register("waxed_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.UNAFFECTED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+    public static final Block WAXED_EXPOSED_POWDER_SNOW_CAULDRON = register("waxed_exposed_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+    public static final Block WAXED_WEATHERED_POWDER_SNOW_CAULDRON = register("waxed_weathered_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+    public static final Block WAXED_OXIDIZED_POWDER_SNOW_CAULDRON = register("waxed_oxidized_powder_snow_cauldron", (settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.POWDER_SNOW_CAULDRON), null);
+
     // 铁质压力板系列
-    public static final Block EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("exposed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
-    public static final Block WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("weathered_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
-    public static final Block OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("oxidized_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("exposed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getExposed_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("weathered_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getWeathered_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("oxidized_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getOxidized_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
 
-    public static final Block WAXED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.UNAFFECTED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
-    public static final Block WAXED_EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_exposed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
-    public static final Block WAXED_WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_weathered_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
-    public static final Block WAXED_OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_oxidized_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(150, BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block WAXED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getWaxed_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.UNAFFECTED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block WAXED_EXPOSED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_exposed_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getWaxed_exposed_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.EXPOSED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block WAXED_WEATHERED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_weathered_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getWaxed_weathered_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.WEATHERED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
+    public static final Block WAXED_OXIDIZED_HEAVY_WEIGHTED_PRESSURE_PLATE = register("waxed_oxidized_heavy_weighted_pressure_plate", (settings) -> new OxidizableWeightedPressurePlateBlock(RustConfig.getWaxed_oxidized_WPPB(), BlockSetType.IRON, Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE), null);
 
     // 铁轨系列 -也不会 注册出来放不了矿车
 
@@ -136,52 +162,12 @@ public class Modblocks {
     public static final Block WAXED_OXIDIZED_SOUL_LANTERN = register("waxed_oxidized_soul_lantern", (settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.OXIDIZED, settings), AbstractBlock.Settings.copy(Blocks.SOUL_LANTERN), BlockRenderLayer.CUTOUT);
 
     public static void initialize() {
-        /*BlockRenderLayerMap.putBlock(Modblocks.EXPOSED_IRON_BARS, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WEATHERED_IRON_BARS, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.OXIDIZED_IRON_BARS, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_IRON_BARS, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_EXPOSED_IRON_BARS, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_WEATHERED_IRON_BARS, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_OXIDIZED_IRON_BARS, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Modblocks.EXPOSED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WEATHERED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.OXIDIZED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_EXPOSED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_WEATHERED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_OXIDIZED_IRON_TRAPDOOR, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Modblocks.EXPOSED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WEATHERED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.OXIDIZED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_EXPOSED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_WEATHERED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_OXIDIZED_IRON_CHAIN, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Modblocks.EXPOSED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WEATHERED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.OXIDIZED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_EXPOSED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_WEATHERED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_OXIDIZED_IRON_DOOR, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Modblocks.EXPOSED_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WEATHERED_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.OXIDIZED_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_EXPOSED_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_WEATHERED_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_OXIDIZED_LANTERN, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Modblocks.EXPOSED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WEATHERED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.OXIDIZED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_EXPOSED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_WEATHERED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Modblocks.WAXED_OXIDIZED_SOUL_LANTERN, BlockRenderLayer.CUTOUT);*/
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), EXPOSED_WATER_CAULDRON);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), WEATHERED_WATER_CAULDRON);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), OXIDIZED_WATER_CAULDRON);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), WAXED_WATER_CAULDRON);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), WAXED_EXPOSED_WATER_CAULDRON);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), WAXED_WEATHERED_WATER_CAULDRON);
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> BiomeColors.getWaterColor(world, pos), WAXED_OXIDIZED_WATER_CAULDRON);
     }
 }

@@ -91,9 +91,45 @@ public class OxidizableLeveledCauldronBlock extends LeveledCauldronBlock impleme
         handler.addEvent(CollisionEvent.EXTINGUISH);
     }
 
+    protected static BlockState whichCauldron(BlockState state) {
+        BlockState blockState;
+        state = state.getBlock().getDefaultState();
+        if(state == Modblocks.EXPOSED_WATER_CAULDRON.getDefaultState() || state == Modblocks.EXPOSED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.EXPOSED_CAULDRON.getDefaultState();
+        } else
+        if(state == Modblocks.WEATHERED_WATER_CAULDRON.getDefaultState() || state == Modblocks.WEATHERED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.WEATHERED_CAULDRON.getDefaultState();
+        } else
+        if(state == Modblocks.OXIDIZED_WATER_CAULDRON.getDefaultState() || state == Modblocks.OXIDIZED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.OXIDIZED_CAULDRON.getDefaultState();
+        } else
+        if(state == Modblocks.WAXED_WATER_CAULDRON.getDefaultState() || state == Modblocks.WAXED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.WAXED_CAULDRON.getDefaultState();
+        } else
+        if(state == Modblocks.WAXED_EXPOSED_WATER_CAULDRON.getDefaultState() || state == Modblocks.WAXED_EXPOSED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.WAXED_EXPOSED_CAULDRON.getDefaultState();
+        } else
+        if(state == Modblocks.WAXED_WEATHERED_WATER_CAULDRON.getDefaultState() || state == Modblocks.WAXED_WEATHERED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.WAXED_WEATHERED_CAULDRON.getDefaultState();
+        } else
+        if(state == Modblocks.WAXED_OXIDIZED_WATER_CAULDRON.getDefaultState() || state == Modblocks.WAXED_OXIDIZED_POWDER_SNOW_CAULDRON.getDefaultState()) {
+            blockState = Modblocks.WAXED_OXIDIZED_CAULDRON.getDefaultState();
+        } else {blockState = Blocks.CAULDRON.getDefaultState();}
+        return blockState;
+    }
+
     private void onFireCollision(BlockState state, World world, BlockPos pos) {
         if (this.precipitation == Biome.Precipitation.SNOW) {
-            decrementFluidLevel((BlockState)Blocks.WATER_CAULDRON.getDefaultState().with(LEVEL, (Integer)state.get(LEVEL)), world, pos);
+            BlockState blockState = state;
+            BlockState state1 = state.getBlock().getDefaultState();
+            if(state1 == Modblocks.EXPOSED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.EXPOSED_WATER_CAULDRON.getDefaultState();}
+            else if (state1 == Modblocks.WEATHERED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.WEATHERED_WATER_CAULDRON.getDefaultState();}
+            else if (state1 == Modblocks.OXIDIZED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.OXIDIZED_WATER_CAULDRON.getDefaultState();}
+            else if (state1 == Modblocks.WAXED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.WAXED_WATER_CAULDRON.getDefaultState();}
+            else if (state1 == Modblocks.WAXED_EXPOSED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.WAXED_EXPOSED_WATER_CAULDRON.getDefaultState();}
+            else if (state1 == Modblocks.WAXED_WEATHERED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.WAXED_WEATHERED_WATER_CAULDRON.getDefaultState();}
+            else if (state1 == Modblocks.WAXED_OXIDIZED_POWDER_SNOW_CAULDRON.getDefaultState()) {blockState = Modblocks.WAXED_OXIDIZED_WATER_CAULDRON.getDefaultState();}
+            decrementFluidLevel((BlockState)blockState.with(LEVEL, (Integer)state.get(LEVEL)), world, pos);
         } else {
             decrementFluidLevel(state, world, pos);
         }
@@ -102,7 +138,7 @@ public class OxidizableLeveledCauldronBlock extends LeveledCauldronBlock impleme
 
     public static void decrementFluidLevel(BlockState state, World world, BlockPos pos) {
         int i = (Integer)state.get(LEVEL) - 1;
-        BlockState blockState = i == 0 ? Blocks.CAULDRON.getDefaultState() : (BlockState)state.with(LEVEL, i);
+        BlockState blockState = i == 0 ? whichCauldron(state) : (BlockState)state.with(LEVEL, i);
         world.setBlockState(pos, blockState);
         world.emitGameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Emitter.of(blockState));
     }

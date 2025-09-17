@@ -1,16 +1,15 @@
 package com.adccadc.rust.mixin;
 
 import com.adccadc.rust.RustConfig;
-import com.adccadc.rust.block.OxidizableChainBlock;
-import com.adccadc.rust.block.OxidizableLanternBlock;
-import com.adccadc.rust.block.OxidizablePaneBlock;
-import com.adccadc.rust.block.OxidizableWeightedPressurePlateBlock;
+import com.adccadc.rust.block.*;
 import net.minecraft.block.*;
+import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Function;
+
+import static net.minecraft.block.Blocks.CAULDRON;
 
 @Mixin(Blocks.class)
 public class BlocksMixin {
@@ -92,6 +93,22 @@ public class BlocksMixin {
             }
             if ("soul_lantern".equals(id)) {
                 cir.setReturnValue(register1(keyOf(id), (Settings) -> new OxidizableLanternBlock(Oxidizable.OxidationLevel.UNAFFECTED, Settings), settings));
+                cir.cancel();
+            }
+            if ("cauldron".equals(id)) {
+                cir.setReturnValue(register1("cauldron", (Settings) -> new OxidizableCauldronBlock(Oxidizable.OxidationLevel.UNAFFECTED, Settings), AbstractBlock.Settings.create().mapColor(MapColor.STONE_GRAY).requiresTool().strength(2.0F).nonOpaque()));
+                cir.cancel();
+            }
+            if ("water_cauldron".equals(id)) {
+                cir.setReturnValue(register1("water_cauldron", (Settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.RAIN, CauldronBehavior.WATER_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.UNAFFECTED, Settings), AbstractBlock.Settings.copyShallow(CAULDRON)));
+                cir.cancel();
+            }
+            if ("lava_cauldron".equals(id)) {
+                cir.setReturnValue(register1("lava_cauldron", (Settings) -> new OxidizableLavaCauldronBlock(Oxidizable.OxidationLevel.UNAFFECTED, Settings), AbstractBlock.Settings.copyShallow(CAULDRON).luminance((state) -> 15)));
+                cir.cancel();
+            }
+            if ("powder_snow_cauldron".equals(id)) {
+                cir.setReturnValue(register1("powder_snow_cauldron", (Settings) -> new OxidizableLeveledCauldronBlock(Biome.Precipitation.SNOW, CauldronBehavior.POWDER_SNOW_CAULDRON_BEHAVIOR, Oxidizable.OxidationLevel.UNAFFECTED, Settings), AbstractBlock.Settings.copyShallow(CAULDRON)));
                 cir.cancel();
             }
         }
