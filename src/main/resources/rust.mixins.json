@@ -4,9 +4,12 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BlocksMixin",
+    "CauldronBehaviorMixin",
     "ExampleMixin",
     "OxidizableMixin",
-    "CauldronBehaviorMixin"
+    "entity.iromGolem.IronGolemEntityMixin",
+    "render.IronGolemEntityRendererMixin",
+    "render.state.IronGolemEntityRenderStateMixin"
   ],
   "injectors": {
     "defaultRequire": 1
