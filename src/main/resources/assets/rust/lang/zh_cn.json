@@ -108,8 +108,15 @@
   "item.rust.waxed_weathered_soul_lantern": "涂蜡的锈蚀灵魂灯笼",
   "item.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼",
 
-  "item.rust.rusty_iron_golem_spawn_egg": "生锈铁傀儡刷怪蛋",
-  "item.rust.waxed_iron_golem_spawn_egg": "涂蜡铁傀儡刷怪蛋",
+  "item.minecraft.potion.effect.tetanus": "破伤风药水",
+  "item.minecraft.potion.effect.long_tetanus": "破伤风药水",
+  "item.minecraft.potion.effect.strong_tetanus": "破伤风药水",
+  "item.minecraft.splash_potion.effect.tetanus": "喷溅型破伤风药水",
+  "item.minecraft.splash_potion.effect.long_tetanus": "喷溅型破伤风药水",
+  "item.minecraft.splash_potion.effect.strong_tetanus": "喷溅型破伤风药水",
+  "item.minecraft.lingering_potion.effect.tetanus": "滞留型破伤风药水",
+  "item.minecraft.lingering_potion.effect.long_tetanus": "滞留型破伤风药水",
+  "item.minecraft.lingering_potion.effect.strong_tetanus": "滞留型破伤风药水",
 
   "block.rust.exposed_iron_block": "斑驳的铁块",
   "block.rust.weathered_iron_block": "锈蚀的铁块",
@@ -213,13 +220,6 @@
   "block.rust.waxed_soul_lantern": "涂蜡的灵魂灯笼",
   "block.rust.waxed_exposed_soul_lantern": "涂蜡的斑驳灵魂灯笼",
   "block.rust.waxed_weathered_soul_lantern": "涂蜡的锈蚀灵魂灯笼",
-  "block.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼",
+  "block.rust.waxed_oxidized_soul_lantern": "涂蜡的氧化灵魂灯笼"
 
-  "entity.rust.exposed_iron_golem": "斑驳的铁傀儡",
-  "entity.rust.weathered_iron_golem": "锈蚀的铁傀儡",
-  "entity.rust.oxidized_iron_golem": "氧化的铁傀儡",
-  "entity.rust.waxed_iron_golem": "涂蜡的铁傀儡",
-  "entity.rust.waxed_exposed_iron_golem": "涂蜡的斑驳铁傀儡",
-  "entity.rust.waxed_weathered_iron_golem": "涂蜡的锈蚀铁傀儡",
-  "entity.rust.waxed_oxidized_iron_golem": "涂蜡的氧化铁傀儡"
 }

@@ -108,8 +108,15 @@
   "item.rust.waxed_weathered_soul_lantern": "Waxed Weathered Soul Lantern",
   "item.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern",
 
-  "item.rust.rusty_iron_golem_spawn_egg": "Rusty Iron Golem Spawn Egg",
-  "item.rust.waxed_iron_golem_spawn_egg": "Waxed Iron Golem Spawn Egg",
+  "item.minecraft.potion.effect.tetanus": "Potion Of Tetanus",
+  "item.minecraft.potion.effect.long_tetanus": "Potion Of Tetanus",
+  "item.minecraft.potion.effect.strong_tetanus": "Potion Of Tetanus",
+  "item.minecraft.splash_potion.effect.tetanus": "Splash Potion Of Tetanus",
+  "item.minecraft.splash_potion.effect.long_tetanus": "Splash Potion Of Tetanus",
+  "item.minecraft.splash_potion.effect.strong_tetanus": "Splash Potion Of Tetanus",
+  "item.minecraft.lingering_potion.effect.tetanus": "Lingering Potion Of Tetanus",
+  "item.minecraft.lingering_potion.effect.long_tetanus": "Lingering Potion Of Tetanus",
+  "item.minecraft.lingering_potion.effect.strong_tetanus": "Lingering Potion Of Tetanus",
 
   "block.rust.exposed_iron_block": "Exposed Iron Block",
   "block.rust.weathered_iron_block": "Weathered Iron Block",
@@ -213,13 +220,6 @@
   "block.rust.waxed_soul_lantern": "Waxed Soul Lantern",
   "block.rust.waxed_exposed_soul_lantern": "Waxed Exposed Soul Lantern",
   "block.rust.waxed_weathered_soul_lantern": "Waxed Weathered Soul Lantern",
-  "block.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern",
+  "block.rust.waxed_oxidized_soul_lantern": "Waxed Oxidized Soul Lantern"
 
-  "entity.rust.exposed_iron_golem": "Exposed Iron Golem",
-  "entity.rust.weathered_iron_golem": "Weathered Iron Golem",
-  "entity.rust.oxidized_iron_golem": "Oxidized Iron Golem",
-  "entity.rust.waxed_iron_golem": "Waxed Iron Golem",
-  "entity.rust.waxed_exposed_iron_golem": "Waxed Exposed Iron Golem",
-  "entity.rust.waxed_weathered_iron_golem": "Waxed Weathered Iron Golem",
-  "entity.rust.waxed_oxidized_iron_golem": "Waxed Oxidized Iron Golem"
 }
