@@ -2,15 +2,16 @@ package com.adccadc.rust;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class RustConfig {
     private static final String CONFIG_FILE_PATH = "./config/rust.properties";
+
+    private static final String MOD_VERSION = "mod_version";
+    private static final String modversion = "1.3.0";
 
     private static final String USE_LEGACY_KEY = "use_legacy_oxidize_logic";
     private static final String AFFECT_REDSTONE = "affect_redstone";
@@ -46,7 +47,7 @@ public class RustConfig {
 
     private static boolean affectEntity = true; // 是否影响实体
     // 各种铁傀儡的生物属性
-    private static List<?> default_IG = new ArrayList<>(Arrays.asList((double) 100.0F, (double) 0.25F, (double) 1.0F, (double) 15.0F, (double) 1.0F, (double) 16.0F)); //原版铁傀儡属性
+    private static final List<?> default_IG = new ArrayList<>(Arrays.asList((double) 100.0F, (double) 0.25F, (double) 1.0F, (double) 15.0F, (double) 1.0F, (double) 16.0F)); //原版铁傀儡属性
     private static List<?> exposed_IG = new ArrayList<>(Arrays.asList((double) 90.0F, (double) 0.22F, (double) 0.95F, (double) 14.0F, (double) 1.0F, (double) 15.0F));
     private static List<?> weathered_IG = new ArrayList<>(Arrays.asList((double) 80.0F, (double) 0.19F, (double) 0.90F, (double) 13.0F, (double) 1.0F, (double) 14.0F));
     private static List<?> oxidized_IG = new ArrayList<>(Arrays.asList((double) 70.0F, (double) 0.16F, (double) 0.85F, (double) 12.0F, (double) 1.0F, (double) 13.0F));
@@ -72,6 +73,17 @@ public class RustConfig {
             result.add(Double.parseDouble(match));
         }
         return result;
+    }
+
+    protected static String formatWithF(List<?> list) {
+        return list.stream()
+                .map(obj -> {
+                    if (obj instanceof Number) {
+                        return obj.toString() + "F";
+                    }
+                    return obj.toString();
+                })
+                .collect(Collectors.joining(",", "[", "]"));
     }
 
     public static void loadConfig() {
@@ -105,8 +117,13 @@ public class RustConfig {
             System.out.println("Loaded rust config: use_legacy_logic = " + useLegacyLogic);
             System.out.println("Loaded rust config: affect_redstone = " + affectRedstone);
             System.out.println("Loaded rust config: affect_entity = " + affectEntity);
+            // 若读取的为非本版本配置文件 复制已改配置并生成新配置
+            if (!Objects.equals(props.getProperty(MOD_VERSION), modversion)) {
+                Rust.LOGGER.warn("Already loaded into the old version config file, updating to the new version config");
+                createDefaultConfig(configFile);
+            }
         } catch (IOException e) {
-            System.err.println("Failed to load config file, using default settings: " + e.getMessage());
+            Rust.LOGGER.error("Failed to load config file, using default settings: " + e.getMessage());
             createDefaultConfig(configFile);
         }
     }
@@ -114,54 +131,57 @@ public class RustConfig {
     private static void createDefaultConfig(File configFile) {
         File configDir = configFile.getParentFile();
         if (!configDir.exists() && !configDir.mkdirs()) {
-            System.err.println("Failed to create config directory: " + configDir.getAbsolutePath());
+            Rust.LOGGER.error("Failed to create config directory: " + configDir.getAbsolutePath());
             return;
         }
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(configFile))) {
 
-            writer.println("# Rust Mod Oxidation Configuration");
+            writer.println("#  Rust Mod Oxidation Configuration");
+            writer.println("#  Please do not modify this item, otherwise the config file will be regenerated");
+            writer.println(MOD_VERSION + "= 1.3.0");
             writer.println();
             writer.println("#  - true: Use old mod version oxidation logic");
             writer.println("#  - false: Use the original oxidation logic");
             writer.println("#  if using the old logic, there is a probability of oxidizing the blocks around the player every 5 minutes");
-            writer.println(USE_LEGACY_KEY + "= false");
+            writer.println(USE_LEGACY_KEY + "= " + useLegacyLogic);
             writer.println();
             writer.println("#  - true: Rust can affect redstone");
             writer.println("#  - false: Rust can't affect redstone");
             writer.println("#  if the value is false, rust will not use subsequent config, use original block state and logic");
-            writer.println(AFFECT_REDSTONE + "= true");
+            writer.println(AFFECT_REDSTONE + "= " + affectRedstone);
             writer.println();
             writer.println("#  - number(int)");
             writer.println("#  How much weight is required for each level of signal (original version is 150)");
-            writer.println(EXPOSED_WPPB + "= 170");
-            writer.println(WEATHERED_WPPB + "= 190");
-            writer.println(OXIDIZED_WPPB + "= 210");
-            writer.println(WAXED_WPPB + "= 160");
-            writer.println(WAXED_EXPOSED_WPPB + "= 180");
-            writer.println(WAXED_WEATHERED_WPPB + "= 200");
-            writer.println(WAXED_OXIDIZED_WPPB + "= 220");
+            writer.println(EXPOSED_WPPB + "= " + exposed_WPPB);
+            writer.println(WEATHERED_WPPB + "= " + weathered_WPPB);
+            writer.println(OXIDIZED_WPPB + "= " + oxidized_WPPB);
+            writer.println(WAXED_WPPB + "= " + waxed_WPPB);
+            writer.println(WAXED_EXPOSED_WPPB + "= " + waxed_exposed_WPPB);
+            writer.println(WAXED_WEATHERED_WPPB + "= " + waxed_weathered_WPPB);
+            writer.println(WAXED_OXIDIZED_WPPB + "= " + waxed_oxidized_WPPB);
             writer.println();
+            /*
             writer.println("#  - true: Rust can affect entity");
             writer.println("#  - false: Rust can't affect entity");
             writer.println("#  if the value is false, rust will not use subsequent config, use original entity attributes");
-            writer.println(AFFECT_ENTITY + "= true");
+            writer.println(AFFECT_ENTITY + "= " + affectEntity);
             writer.println();
             writer.println("#  - [decimal(float),decimal(float),decimal(float),decimal(float),decimal(float),decimal(float)]");
             writer.println("#  - [max health,movement speed,knockback resistance,attack damage,step height,follow range] *Please add F at the end of each float value");
             writer.println("#  This will change the attributes of the golem, some of which may not be effective for existing golem");
-            writer.println(EXPOSED_IG + "= [90.0F,0.22F,0.95F,14.0F,1.0F,15.0F]");
-            writer.println(WEATHERED_IG + "= [80.0F,0.19F,0.90F,13.0F,1.0F,14.0F]");
-            writer.println(OXIDIZED_IG + "= [70.0F,0.16F,0.85F,12.0F,1.0F,13.0F]");
-            writer.println(WAXED_IG + "= [110.0F,0.23F,1.0F,14.5F,0.9F,16.0F]");
-            writer.println(WAXED_EXPOSED_IG + "= [100.0F,0.20F,0.98F,13.5F,0.9F,15.0F]");
-            writer.println(WAXED_WEATHERED_IG + "= [90.0F,0.17F,0.93F,12.5F,0.9F,14.0F]");
-            writer.println(WAXED_OXIDIZED_IG + "= [80.0F,0.16F,0.88F,11.5F,0.9F,13.0F]");
-
-            System.out.println("Created default config file: " + configFile.getAbsolutePath());
-            System.out.println("Please edit the file and restart Minecraft to apply changes.");
+            writer.println(EXPOSED_IG + "= " + formatWithF(exposed_IG));
+            writer.println(WEATHERED_IG + "= " + formatWithF(weathered_IG));
+            writer.println(OXIDIZED_IG + "= " + formatWithF(oxidized_IG));
+            writer.println(WAXED_IG + "= " + formatWithF(waxed_IG));
+            writer.println(WAXED_EXPOSED_IG + "= " + formatWithF(waxed_exposed_IG));
+            writer.println(WAXED_WEATHERED_IG + "= " + formatWithF(waxed_weathered_IG));
+            writer.println(WAXED_OXIDIZED_IG + "= " + formatWithF(waxed_oxidized_IG));
+            */
+            Rust.LOGGER.info("Created new config file: " + configFile.getAbsolutePath());
+            Rust.LOGGER.info("Please edit the file and restart Minecraft to apply changes.");
         } catch (IOException e) {
-            System.err.println("Failed to create config file: " + e.getMessage());
+            Rust.LOGGER.error("Failed to create config file: " + e.getMessage());
         }
     }
 
