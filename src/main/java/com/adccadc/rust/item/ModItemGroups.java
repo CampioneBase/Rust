@@ -127,14 +127,6 @@ public class ModItemGroups {
 
             itemGroup.add(Moditems.RUSTY_IRON_BOOTS);
             itemGroup.add(Moditems.WAXED_IRON_BOOTS);
-
-            itemGroup.add(Moditems.EXPOSED_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.WEATHERED_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.OXIDIZED_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.WAXED_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.WAXED_EXPOSED_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.WAXED_WEATHERED_IRON_GOLEM_EGG);
-            itemGroup.add(Moditems.WAXED_OXIDIZED_IRON_GOLEM_EGG);
         });
     }
 }

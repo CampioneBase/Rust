@@ -2,7 +2,6 @@ package com.adccadc.rust.item;
 
 import com.adccadc.rust.Rust;
 import com.adccadc.rust.block.Modblocks;
-import com.adccadc.rust.entity.ModEntity;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.item.equipment.ArmorMaterial;
@@ -121,14 +120,6 @@ public class Moditems {
     public static final Item WAXED_EXPOSED_SOUL_LANTERN = register("waxed_exposed_soul_lantern", (settings) -> new BlockItem(Modblocks.WAXED_EXPOSED_SOUL_LANTERN, settings), new Item.Settings());
     public static final Item WAXED_WEATHERED_SOUL_LANTERN = register("waxed_weathered_soul_lantern", (settings) -> new BlockItem(Modblocks.WAXED_WEATHERED_SOUL_LANTERN, settings), new Item.Settings());
     public static final Item WAXED_OXIDIZED_SOUL_LANTERN = register("waxed_oxidized_soul_lantern", (settings) -> new BlockItem(Modblocks.WAXED_OXIDIZED_SOUL_LANTERN, settings), new Item.Settings());
-
-    public static final Item EXPOSED_IRON_GOLEM_EGG = register("exposed_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.EXPOSED_IRON_GOLEM,settings), new Item.Settings());
-    public static final Item WEATHERED_IRON_GOLEM_EGG = register("weathered_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.WEATHERED_IRON_GOLEM,settings), new Item.Settings());
-    public static final Item OXIDIZED_IRON_GOLEM_EGG = register("oxidized_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.OXIDIZED_IRON_GOLEM,settings), new Item.Settings());
-    public static final Item WAXED_IRON_GOLEM_EGG = register("waxed_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.WAXED_IRON_GOLEM,settings), new Item.Settings());
-    public static final Item WAXED_EXPOSED_IRON_GOLEM_EGG = register("waxed_exposed_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.WAXED_EXPOSED_IRON_GOLEM,settings), new Item.Settings());
-    public static final Item WAXED_WEATHERED_IRON_GOLEM_EGG = register("waxed_weathered_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.WAXED_WEATHERED_IRON_GOLEM,settings), new Item.Settings());
-    public static final Item WAXED_OXIDIZED_IRON_GOLEM_EGG = register("waxed_oxidized_iron_golem_spawn_egg", (settings) -> new SpawnEggItem(ModEntity.WAXED_OXIDIZED_IRON_GOLEM,settings), new Item.Settings());
 
     public static final Item VERDIGRIS = register("verdigris", Item::new, new Item.Settings());
     public static final Item IRON_RUST = register("iron_rust", Item::new, new Item.Settings());
