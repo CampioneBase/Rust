@@ -47,19 +47,19 @@ public class RustConfig {
 
     private static boolean affectEntity = true; // 是否影响实体
     // 各种铁傀儡的生物属性
-    private static final List<?> default_IG = new ArrayList<>(Arrays.asList((double) 100.0F, (double) 0.25F, (double) 1.0F, (double) 15.0F, (double) 1.0F, (double) 16.0F)); //原版铁傀儡属性
-    private static List<?> exposed_IG = new ArrayList<>(Arrays.asList((double) 90.0F, (double) 0.22F, (double) 0.95F, (double) 14.0F, (double) 1.0F, (double) 15.0F));
-    private static List<?> weathered_IG = new ArrayList<>(Arrays.asList((double) 80.0F, (double) 0.19F, (double) 0.90F, (double) 13.0F, (double) 1.0F, (double) 14.0F));
-    private static List<?> oxidized_IG = new ArrayList<>(Arrays.asList((double) 70.0F, (double) 0.16F, (double) 0.85F, (double) 12.0F, (double) 1.0F, (double) 13.0F));
-    private static List<?> waxed_IG = new ArrayList<>(Arrays.asList((double) 110.0F, (double) 0.23F, (double) 1.0F, (double) 14.5F, (double) 0.9F, (double) 16.0F));
-    private static List<?> waxed_exposed_IG = new ArrayList<>(Arrays.asList((double) 100.0F, (double) 0.20F, (double) 0.98F, (double) 13.5F, (double) 0.9F, (double) 15.0F));
-    private static List<?> waxed_weathered_IG = new ArrayList<>(Arrays.asList((double) 90.0F, (double) 0.17F, (double) 0.93F, (double) 12.5F, (double) 0.9F, (double) 14.0F));
-    private static List<?> waxed_oxidized_IG = new ArrayList<>(Arrays.asList((double) 80.0F, (double) 0.14F, (double) 0.88F, (double) 11.5F, (double) 0.9F, (double) 13.0F));
+    private static final List<?> default_IG = new ArrayList<>(Arrays.asList((double) 0.25F, (double) 15.0F)); //原版铁傀儡属性(移动速度，攻击伤害)
+    private static List<?> exposed_IG = new ArrayList<>(Arrays.asList((double) 0.22F, (double) 14.0F));
+    private static List<?> weathered_IG = new ArrayList<>(Arrays.asList((double) 0.19F, (double) 13.0F));
+    private static List<?> oxidized_IG = new ArrayList<>(Arrays.asList((double) 0.16F, (double) 12.0F));
+    private static List<?> waxed_IG = new ArrayList<>(Arrays.asList((double) 0.23F, (double) 14.5F));
+    private static List<?> waxed_exposed_IG = new ArrayList<>(Arrays.asList((double) 0.20F, (double) 13.5F));
+    private static List<?> waxed_weathered_IG = new ArrayList<>(Arrays.asList((double) 0.17F, (double) 12.5F));
+    private static List<?> waxed_oxidized_IG = new ArrayList<>(Arrays.asList((double) 0.14F, (double) 11.5F));
 
     private RustConfig() {}
 
-    protected static List<Double> convertWithRegex(String input) {
-        List<Double> result = new ArrayList<>();
+    protected static List<Float> convertWithRegex(String input) {
+        List<Float> result = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("\\d+(?:\\.\\d+)?(?:F|f)?");
         Matcher matcher = pattern.matcher(input);
@@ -70,7 +70,7 @@ public class RustConfig {
             if (match.toUpperCase().endsWith("F")) {
                 match = match.substring(0, match.length() - 1);
             }
-            result.add(Double.parseDouble(match));
+            result.add(Float.parseFloat(match));
         }
         return result;
     }
@@ -107,13 +107,13 @@ public class RustConfig {
             waxed_exposed_WPPB = Integer.parseUnsignedInt(props.getProperty(WAXED_EXPOSED_WPPB, "150").trim());
             waxed_weathered_WPPB = Integer.parseUnsignedInt(props.getProperty(WAXED_WEATHERED_WPPB, "150").trim());
             waxed_oxidized_WPPB = Integer.parseUnsignedInt(props.getProperty(WAXED_OXIDIZED_WPPB, "150").trim());
-            exposed_IG = convertWithRegex(props.getProperty(EXPOSED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
-            weathered_IG = convertWithRegex(props.getProperty(WEATHERED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
-            oxidized_IG = convertWithRegex(props.getProperty(OXIDIZED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
-            waxed_IG = convertWithRegex(props.getProperty(WAXED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]"));
-            waxed_exposed_IG = convertWithRegex(props.getProperty(WAXED_EXPOSED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
-            waxed_weathered_IG = convertWithRegex(props.getProperty(WAXED_WEATHERED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
-            waxed_oxidized_IG = convertWithRegex(props.getProperty(WAXED_OXIDIZED_IG, "[100.0F,0.25F,1.0F,15.0F,1.0F,16.0F]").trim());
+            exposed_IG = convertWithRegex(props.getProperty(EXPOSED_IG, "[0.22F,14.0F]").trim());
+            weathered_IG = convertWithRegex(props.getProperty(WEATHERED_IG, "[0.19F,13.0F]").trim());
+            oxidized_IG = convertWithRegex(props.getProperty(OXIDIZED_IG, "[0.16F,12.0F]").trim());
+            waxed_IG = convertWithRegex(props.getProperty(WAXED_IG, "[0.23F,14.5F]"));
+            waxed_exposed_IG = convertWithRegex(props.getProperty(WAXED_EXPOSED_IG, "[0.20F,13.5F]").trim());
+            waxed_weathered_IG = convertWithRegex(props.getProperty(WAXED_WEATHERED_IG, "[0.17F,12.5F]").trim());
+            waxed_oxidized_IG = convertWithRegex(props.getProperty(WAXED_OXIDIZED_IG, "[0.14F,11.5F]").trim());
             System.out.println("Loaded rust config: use_legacy_logic = " + useLegacyLogic);
             System.out.println("Loaded rust config: affect_redstone = " + affectRedstone);
             System.out.println("Loaded rust config: affect_entity = " + affectEntity);
@@ -161,14 +161,13 @@ public class RustConfig {
             writer.println(WAXED_WEATHERED_WPPB + "= " + waxed_weathered_WPPB);
             writer.println(WAXED_OXIDIZED_WPPB + "= " + waxed_oxidized_WPPB);
             writer.println();
-            /*
             writer.println("#  - true: Rust can affect entity");
             writer.println("#  - false: Rust can't affect entity");
             writer.println("#  if the value is false, rust will not use subsequent config, use original entity attributes");
             writer.println(AFFECT_ENTITY + "= " + affectEntity);
             writer.println();
-            writer.println("#  - [decimal(float),decimal(float),decimal(float),decimal(float),decimal(float),decimal(float)]");
-            writer.println("#  - [max health,movement speed,knockback resistance,attack damage,step height,follow range] *Please add F at the end of each float value");
+            writer.println("#  - [decimal(float),decimal(float)]");
+            writer.println("#  - [movement speed,attack damage] *Please add F at the end of each float value");
             writer.println("#  This will change the attributes of the golem, some of which may not be effective for existing golem");
             writer.println(EXPOSED_IG + "= " + formatWithF(exposed_IG));
             writer.println(WEATHERED_IG + "= " + formatWithF(weathered_IG));
@@ -177,7 +176,7 @@ public class RustConfig {
             writer.println(WAXED_EXPOSED_IG + "= " + formatWithF(waxed_exposed_IG));
             writer.println(WAXED_WEATHERED_IG + "= " + formatWithF(waxed_weathered_IG));
             writer.println(WAXED_OXIDIZED_IG + "= " + formatWithF(waxed_oxidized_IG));
-            */
+
             Rust.LOGGER.info("Created new config file: " + configFile.getAbsolutePath());
             Rust.LOGGER.info("Please edit the file and restart Minecraft to apply changes.");
         } catch (IOException e) {
