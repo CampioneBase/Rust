@@ -1,6 +1,7 @@
 package com.adccadc.rust.mixin.entity.iromGolem;
 
 import com.adccadc.rust.Rust;
+import com.adccadc.rust.RustTick;
 import com.adccadc.rust.item.Moditems;
 import com.adccadc.rust.manager.RustManager;
 import com.adccadc.rust.proxy.IronGolemEntityProxy;
@@ -26,6 +27,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -166,4 +168,18 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     protected Text getDefaultName(){
         return Text.of(this.rust.getName() + this.getType().getName().getString());
     }
+/*
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.getWorld().isClient && this.age % 5 == 0) {
+            this.updateGoalControls();
+        }
+        if (!this.getWorld().isClient()) {
+            if (random.nextDouble() < 1 && RustTick.tick((ServerWorld) this.getWorld())) {
+                this.rust.tryRusted();
+            }
+        }
+    }
+*/
 }
