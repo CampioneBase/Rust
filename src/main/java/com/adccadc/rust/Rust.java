@@ -2,11 +2,12 @@ package com.adccadc.rust;
 
 import com.adccadc.rust.block.Modblocks;
 import com.adccadc.rust.effect.ModEffects;
-import com.adccadc.rust.entity.EntityReplace;
-import com.adccadc.rust.entity.ModEntity;
 import com.adccadc.rust.item.ItemReplace;
 import com.adccadc.rust.item.ModItemGroups;
 import com.adccadc.rust.item.Moditems;
+import com.adccadc.rust.manager.RustManager;
+import com.adccadc.rust.mixin.entity.iromGolem.IronGolemEntityMixin;
+import com.adccadc.rust.potion.ModPotion;
 import com.google.common.collect.BiMap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -14,11 +15,9 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.block.*;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleEffect;
@@ -36,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 public class Rust implements ModInitializer {
@@ -96,7 +94,7 @@ public class Rust implements ModInitializer {
         ModItemGroups.register();
         Modblocks.initialize();
         ModEffects.initialize();
-        ModEntity.initialize();
+        ModPotion.initialize();
 
         // 破伤风
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
@@ -146,22 +144,23 @@ public class Rust implements ModInitializer {
 
         // 氧化过程
         ServerTickEvents.END_WORLD_TICK.register(world -> {
-            if (world.getTime() % 6000 == 0) { // 5min一次
-                if (world instanceof ServerWorld serverWorld) {
-                    for (PlayerEntity player : serverWorld.getPlayers()) {
-                        Random random = new Random();
-                        Box box = new Box(player.getBlockPos()).expand(32, 32, 32);
-                        ItemReplace.ChangeCorrosionToolWithAttribute(
-                                List.of(Items.IRON_SWORD, Items.IRON_AXE, Items.IRON_PICKAXE, Items.IRON_SHOVEL, Items.IRON_HOE, Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS),
-                                List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE, Moditems.RUSTY_IRON_HELMET, Moditems.RUSTY_IRON_CHESTPLATE, Moditems.RUSTY_IRON_LEGGINGS, Moditems.RUSTY_IRON_BOOTS),
-                                player);
-                        //EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
-                        if(RustConfig.useLegacyOxidizeLogic()) {
+            if(RustConfig.useLegacyOxidizeLogic()) {
+                if (world.getTime() % 6000 == 0) { // 5min一次
+                    if (world instanceof ServerWorld serverWorld) {
+                        for (PlayerEntity player : serverWorld.getPlayers()) {
+                            Random random = new Random();
+                            Box box = new Box(player.getBlockPos()).expand(32, 32, 32);
+                            // 旧版物品氧化机制
+                            ItemReplace.ChangeCorrosionToolWithAttribute(
+                                    List.of(Items.IRON_SWORD, Items.IRON_AXE, Items.IRON_PICKAXE, Items.IRON_SHOVEL, Items.IRON_HOE, Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS),
+                                    List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE, Moditems.RUSTY_IRON_HELMET, Moditems.RUSTY_IRON_CHESTPLATE, Moditems.RUSTY_IRON_LEGGINGS, Moditems.RUSTY_IRON_BOOTS),
+                                    player);
+                            //EntityReplace.ReplaceRustyEntityWithAttribute(serverWorld, box);
                             // 旧版方块氧化机制
                             for (BlockPos pos : BlockPos.iterate((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.maxX, (int) box.maxY, (int) box.maxZ)) {
                                 BlockState state = world.getBlockState(pos);
                                 Block block = state.getBlock();
-                                Block increasesBlock = (Block)((BiMap)OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block);
+                                Block increasesBlock = (Block) ((BiMap) OxidizeMap.MOD_OXIDATION_LEVEL_INCREASES.get()).get(block);
                                 if (increasesBlock != null) {
                                     if (random.nextDouble() > 0.8) {
                                         BlockUtils.PutWhichBlockWithAttribute(world, increasesBlock, state, pos);
@@ -170,6 +169,14 @@ public class Rust implements ModInitializer {
                                 }
                             }
                         }
+                    }
+                }
+            } else {
+                // 新版氧化过程
+                if (RustTick.tick(world)) {
+                    // 新版物品氧化机制
+                    for (PlayerEntity player : world.getPlayers()) {
+                        ItemReplace.OxidizationItemWithAttribute(player, 3);
                     }
                 }
             }
@@ -217,62 +224,23 @@ public class Rust implements ModInitializer {
                     return ActionResult.SUCCESS;
                 }
 
-                // 铁质方块除锈
+                // 方块除锈
                 decreasesBlock = (Block)((BiMap)OxidizeMap.MOD_OXIDATION_LEVEL_DECREASES.get()).get(block);
                 if (decreasesBlock != null) {
+                    if (OxidizeMap.IRON_TYPE.contains(block)) {
+                        UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, null, Moditems.IRON_RUST, 1);
+                    } else if (OxidizeMap.COPPER_TYPE.contains(block)) {
+                        // 铜门 铜活版门检测
+                        if (block instanceof DoorBlock || block instanceof TrapdoorBlock) {
+                            if (!player.isSneaking()) return ActionResult.PASS;
+                        }
+                        UseLater(null, null, null, null, null, (ServerWorld) world, null, pos, null, Moditems.VERDIGRIS, 1);
+                    }
                     BlockUtils.PutWhichBlockWithAttribute(world, decreasesBlock, state, pos);
-
-                    UseLater(stack, player, 1, null, null, (ServerWorld) world, null, pos, null, Moditems.IRON_RUST, 1);
-                    // 播放剥离音效
-                    //world.playSound(null, pos, SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     return ActionResult.SUCCESS;
                 }
-
-                // 铜质方块除锈
-                if (!(block instanceof Oxidizable)) return ActionResult.PASS;
-
-                Optional<Block> decreasedBlock = Oxidizable.getDecreasedOxidationBlock(state.getBlock());
-                if (decreasedBlock.isEmpty()) return ActionResult.PASS;
-
-                // 铜门 铜活版门检测
-                if (block instanceof DoorBlock || block instanceof TrapdoorBlock) {
-                    if (!player.isSneaking()) return ActionResult.PASS;
-                }
-
-                UseLater(null, null, null, null, null, (ServerWorld) world, null, pos, null, Moditems.VERDIGRIS, 1);
-
             }
             return ActionResult.PASS;
         });
-/*
-        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (world.isClient) return ActionResult.PASS;
-
-            if (entity.getType() == ModEntity.EXPOSED_IRON_GOLEM || entity.getType() == ModEntity.WAXED_IRON_GOLEM || entity.getType() == EntityType.IRON_GOLEM) {
-                ItemStack stack = player.getStackInHand(hand);
-                if(world instanceof ServerWorld serverWorld) {
-                    if (stack.getItem() instanceof HoneycombItem && entity.getType() == EntityType.IRON_GOLEM) {
-                        EntityReplace.ReplaceIronGolemWithAttribute(serverWorld, (IronGolemEntity) entity, false);
-                        UseLater(stack, player, 1, null, hitResult, serverWorld, entity.getPos(), null, ParticleTypes.WAX_ON, null, null);
-                        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_HONEYCOMB_WAX_ON, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                        return ActionResult.SUCCESS;
-                    }
-                    if (stack.getItem() instanceof AxeItem && entity.getType() != EntityType.IRON_GOLEM) {
-                        EntityReplace.ReplaceIronGolemWithAttribute(serverWorld, (IronGolemEntity) entity, null);
-                        if (entity.getType() == ModEntity.EXPOSED_IRON_GOLEM) {
-                            UseLater(stack, player, 4, null, null, serverWorld, entity.getPos(), null, ParticleTypes.WAX_OFF, Moditems.IRON_RUST, 4);
-                            world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_AXE_SCRAPE, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                        } else {
-                            UseLater(stack, player, 4, null, null, serverWorld, entity.getPos(), null, ParticleTypes.WAX_OFF, null, null);
-                            world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ITEM_AXE_WAX_OFF, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                        }
-                        return ActionResult.SUCCESS;
-                    }
-                }
-            }
-
-            return ActionResult.PASS;
-        });
-*/
 	}
 }
