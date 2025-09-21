@@ -1,23 +1,24 @@
 package com.adccadc.rust.mixin.entity.iromGolem;
 
 import com.adccadc.rust.Rust;
-import com.adccadc.rust.RustTick;
+import com.adccadc.rust.RustConfig;
+import com.adccadc.rust.effect.ModEffects;
 import com.adccadc.rust.item.Moditems;
 import com.adccadc.rust.manager.RustManager;
 import com.adccadc.rust.proxy.IronGolemEntityProxy;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.storage.ReadView;
@@ -27,7 +28,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,7 +39,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
 {
     // 锈蚀控制器
     @Unique
-    public RustManager rust = new RustManager(new ItemStack(Moditems.IRON_RUST, 2), 3);
+    public RustManager rust = new RustManager(new ItemStack(Moditems.IRON_RUST, 4), 3);
 
     public IronGolemEntityMixin(EntityType<? extends IronGolemEntity> entityType, World world) {
         super(entityType, world);
@@ -53,6 +53,27 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     @Unique
     public RustManager getRust(){
         return this.rust;
+    }
+
+    @Unique
+    protected Float AttackDamage() {
+        float damage = (float) this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE);
+        if (!this.rust.getState().isWaxed) {
+            switch (this.rust.getState().level) {
+                case 0 -> damage = (float) this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE);
+                case 1 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getExposed_IG().get(1)));
+                case 2 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getWeathered_IG().get(1)));
+                case 3 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getOxidized_IG().get(1)));
+            }
+        } else {
+            switch (this.rust.getState().level) {
+                case 0 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getWaxed_IG().get(1)));
+                case 1 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getWaxed_exposed_IG().get(1)));
+                case 2 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getWaxed_weathered_IG().get(1)));
+                case 3 -> damage = (float) (this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE) - (15.0F - (float) RustConfig.getWaxed_oxidized_IG().get(1)));
+            }
+        }
+        return damage;
     }
 
     @Inject(method = "writeCustomData",
@@ -86,7 +107,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     )
     protected void interactMobWithRustActions(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir){
         ItemStack itemStack = player.getStackInHand(hand);
-        // 是否为水桶
+        /*
         if (itemStack.isOf(Items.WATER_BUCKET)){
             // 处理物品
             if(!player.isCreative()){
@@ -101,8 +122,11 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
             }else{
                 cir.setReturnValue(ActionResult.SUCCESS);
             }
+
+        }
+        */
         // 物品是否含有斧头标签
-        } else if (itemStack.isIn(ItemTags.AXES)){
+        if (itemStack.isIn(ItemTags.AXES)){
             // 执行一次除锈
             ItemStack dropStack;
             if (((dropStack = this.rust.tryDerusted()) == null)){
@@ -128,12 +152,12 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
                             0.1F
                     );
                     // 处理物品
-                    itemStack.damage(1, player);
+                    itemStack.damage(4, player);
                     cir.setReturnValue(ActionResult.SUCCESS);
                 }
             }
         // 物品是否为蜜脾
-        } else if (itemStack.isOf(Items.HONEYCOMB) && itemStack.getCount() >= 2) {
+        } else if (itemStack.isOf(Items.HONEYCOMB) && itemStack.getCount() >= 4) {
             // 尝试上蜡
             if (!this.rust.tryWaxed()){
                 // 上蜡失败
@@ -156,9 +180,41 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
                             0.1F
                     );
                     // 处理物品
-                    itemStack.decrementUnlessCreative(2, player);
+                    itemStack.decrementUnlessCreative(4, player);
                     cir.setReturnValue(ActionResult.SUCCESS);
                 }
+            }
+        }
+    }
+
+    @Inject(
+            method = "getAttackDamage",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void getAttackDamage(CallbackInfoReturnable<Float> cir) {
+        cir.setReturnValue(AttackDamage());
+        cir.cancel();
+    }
+
+    @Inject(
+            method = "tryAttack",
+            at = @At("RETURN")
+    )
+    public void tryAttack(ServerWorld world, Entity target, CallbackInfoReturnable<Boolean> cir) {
+        float f1 = AttackDamage();
+        float g1 = (int)f1 > 0 ? f1 / 2.0F + (float)this.random.nextInt((int)f1) : f1;
+        DamageSource damageSource = this.getDamageSources().mobAttack(this);
+        boolean bl1 = target.damage(world, damageSource, g1);
+        if (bl1 && target instanceof LivingEntity livingEntity) {
+            StatusEffectInstance tetanusEffect = livingEntity.getStatusEffect(ModEffects.TETANUS);
+            if (tetanusEffect == null) {
+                // 给与破伤风1级 10s
+                livingEntity.addStatusEffect(new StatusEffectInstance(
+                        ModEffects.TETANUS,
+                        200,
+                        0
+                ));
             }
         }
     }
@@ -168,18 +224,33 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     protected Text getDefaultName(){
         return Text.of(this.rust.getName() + this.getType().getName().getString());
     }
-/*
+
+    @Override
+    public float getMovementSpeed() {
+        float movementspeed = super.getMovementSpeed();
+        if (!this.rust.getState().isWaxed) {
+             switch (this.rust.getState().level) {
+                case 0 -> movementspeed = (float) this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED);
+                case 1 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getExposed_IG().getFirst()));
+                case 2 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWeathered_IG().getFirst()));
+                case 3 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getOxidized_IG().getFirst()));
+            }
+        } else {
+            switch (this.rust.getState().level) {
+                case 0 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_IG().getFirst()));
+                case 1 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_exposed_IG().getFirst()));
+                case 2 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_weathered_IG().getFirst()));
+                case 3 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_oxidized_IG().getFirst()));
+            }
+        }
+        return movementspeed;
+    }
+
     @Override
     public void tick() {
         super.tick();
         if (!this.getWorld().isClient && this.age % 5 == 0) {
             this.updateGoalControls();
         }
-        if (!this.getWorld().isClient()) {
-            if (random.nextDouble() < 1 && RustTick.tick((ServerWorld) this.getWorld())) {
-                this.rust.tryRusted();
-            }
-        }
     }
-*/
 }
