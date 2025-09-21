@@ -51,6 +51,34 @@ public class TetanusEffecct extends StatusEffect {
                 entity.damage((ServerWorld) entity.getWorld(), entity.getDamageSources().magic(), amplifier);
                 break;
 
+            case 3:
+                // 破伤风buff延长10s
+                StatusEffectInstance tetanusEffect = entity.getStatusEffect(ModEffects.TETANUS);
+                if (tetanusEffect == null) {break;}
+                int newDuration = tetanusEffect.getDuration() + 200;
+                entity.addStatusEffect(new StatusEffectInstance(
+                        ModEffects.TETANUS,
+                        newDuration,
+                        tetanusEffect.getAmplifier(),
+                        tetanusEffect.isAmbient(),
+                        tetanusEffect.shouldShowParticles(),
+                        tetanusEffect.shouldShowIcon()
+                ));
+
+            case 6:
+                // 破伤风等级+1 （不超过4级）
+                StatusEffectInstance tetanusEffect1 = entity.getStatusEffect(ModEffects.TETANUS);
+                if (tetanusEffect1 == null) {break;}
+                int newAmplifier = Math.min(tetanusEffect1.getAmplifier() + 1, 4);
+                entity.addStatusEffect(new StatusEffectInstance(
+                        ModEffects.TETANUS,
+                        tetanusEffect1.getDuration(),
+                        newAmplifier,
+                        tetanusEffect1.isAmbient(),
+                        tetanusEffect1.shouldShowParticles(),
+                        tetanusEffect1.shouldShowIcon()
+                ));
+
             default:
                 break;
         }

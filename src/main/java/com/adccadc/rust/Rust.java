@@ -2,6 +2,7 @@ package com.adccadc.rust;
 
 import com.adccadc.rust.block.Modblocks;
 import com.adccadc.rust.effect.ModEffects;
+import com.adccadc.rust.effect.TetanusEffecct;
 import com.adccadc.rust.item.ItemReplace;
 import com.adccadc.rust.item.ModItemGroups;
 import com.adccadc.rust.item.Moditems;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.block.*;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -104,31 +106,7 @@ public class Rust implements ModInitializer {
             if (List.of(Moditems.RUSTY_IRON_SWORD, Moditems.RUSTY_IRON_AXE, Moditems.RUSTY_IRON_PICKAXE, Moditems.RUSTY_IRON_SHOVEL, Moditems.RUSTY_IRON_HOE).contains(stack.getItem()) && random.nextDouble() > 0.7) {
                 if (entity instanceof LivingEntity livingEntity) {
                     StatusEffectInstance tetanusEffect = livingEntity.getStatusEffect(ModEffects.TETANUS);
-                    if (tetanusEffect != null) {
-                        if (random.nextDouble() < 0.5) {
-                            // 破伤风buff延长10s
-                            int newDuration = tetanusEffect.getDuration() + 200;
-                            livingEntity.addStatusEffect(new StatusEffectInstance(
-                                    ModEffects.TETANUS,
-                                    newDuration,
-                                    tetanusEffect.getAmplifier(),
-                                    tetanusEffect.isAmbient(),
-                                    tetanusEffect.shouldShowParticles(),
-                                    tetanusEffect.shouldShowIcon()
-                            ));
-                        } else {
-                            // 破伤风等级+1 （不超过4级）
-                            int newAmplifier = Math.min(tetanusEffect.getAmplifier() + 1, 4);
-                            livingEntity.addStatusEffect(new StatusEffectInstance(
-                                    ModEffects.TETANUS,
-                                    tetanusEffect.getDuration(),
-                                    newAmplifier,
-                                    tetanusEffect.isAmbient(),
-                                    tetanusEffect.shouldShowParticles(),
-                                    tetanusEffect.shouldShowIcon()
-                            ));
-                        }
-                    } else {
+                    if (tetanusEffect == null) {
                         // 给与破伤风1级 10s
                         livingEntity.addStatusEffect(new StatusEffectInstance(
                                 ModEffects.TETANUS,
@@ -242,5 +220,26 @@ public class Rust implements ModInitializer {
             }
             return ActionResult.PASS;
         });
+        /*
+        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            Rust.LOGGER.info(world.toString());
+            if (world.isClient) return ActionResult.PASS;
+            if (entity.getType() == EntityType.IRON_GOLEM) {
+                if (player.getStackInHand(hand).getItem() == Items.GUNPOWDER) {
+                    //Rust.LOGGER.info("1");
+                    return ActionResult.SUCCESS;
+                }
+            }
+
+                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+                String caller = "";
+                for (int i = 1; i < Math.min(5, stackTrace.length); i++) {
+                    caller += stackTrace[i].getMethodName() + " <-";
+                }
+                Rust.LOGGER.info("调用链:{}",caller);
+
+            return ActionResult.PASS;
+        });
+        */
 	}
 }
