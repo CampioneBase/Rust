@@ -2,10 +2,12 @@ package com.adccadc.rust.mixin.entity.iromGolem;
 
 import com.adccadc.rust.Rust;
 import com.adccadc.rust.RustConfig;
+import com.adccadc.rust.RustTick;
 import com.adccadc.rust.effect.ModEffects;
 import com.adccadc.rust.item.Moditems;
 import com.adccadc.rust.manager.RustManager;
 import com.adccadc.rust.proxy.IronGolemEntityProxy;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -138,7 +140,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
                     // 生成掉落物
                     ItemEntity drop = this.dropStack(serverWorld, dropStack, 1.5F);
                     // 播放音效
-                    this.playSound(SoundEvents.ITEM_AXE_WAX_OFF, 1.0F, 1.0F);
+                    this.playSound(SoundEvents.ITEM_AXE_SCRAPE, 1.0F, 1.0F);
                     // 播放粒子
                     serverWorld.spawnParticles(
                             ParticleTypes.WAX_OFF,
@@ -251,6 +253,12 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
         super.tick();
         if (!this.getWorld().isClient && this.age % 5 == 0) {
             this.updateGoalControls();
+        }
+        if (this.getWorld().isClient) {
+            if (RustTick.CanRusty("client_entity")) {RustTick.Client_Entity_Can_Rusty = false ;this.rust.tryRusted();}
+        }
+        if (!this.getWorld().isClient) {
+            if (RustTick.CanRusty("server_entity")) {RustTick.Server_Entity_Can_Rusty = false ;this.rust.tryRusted();}
         }
     }
 }

@@ -122,6 +122,7 @@ public class Rust implements ModInitializer {
 
         // 氧化过程
         ServerTickEvents.END_WORLD_TICK.register(world -> {
+            RustTick.Judge_Rusty(world);
             if(RustConfig.useLegacyOxidizeLogic()) {
                 if (world.getTime() % 6000 == 0) { // 5min一次
                     if (world instanceof ServerWorld serverWorld) {
@@ -151,7 +152,8 @@ public class Rust implements ModInitializer {
                 }
             } else {
                 // 新版氧化过程
-                if (RustTick.tick(world)) {
+                if (RustTick.CanRusty("item")) {
+                    RustTick.Item_Can_Rusty = false;
                     // 新版物品氧化机制
                     for (PlayerEntity player : world.getPlayers()) {
                         ItemReplace.OxidizationItemWithAttribute(player, 3);
@@ -220,26 +222,5 @@ public class Rust implements ModInitializer {
             }
             return ActionResult.PASS;
         });
-        /*
-        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            Rust.LOGGER.info(world.toString());
-            if (world.isClient) return ActionResult.PASS;
-            if (entity.getType() == EntityType.IRON_GOLEM) {
-                if (player.getStackInHand(hand).getItem() == Items.GUNPOWDER) {
-                    //Rust.LOGGER.info("1");
-                    return ActionResult.SUCCESS;
-                }
-            }
-
-                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-                String caller = "";
-                for (int i = 1; i < Math.min(5, stackTrace.length); i++) {
-                    caller += stackTrace[i].getMethodName() + " <-";
-                }
-                Rust.LOGGER.info("调用链:{}",caller);
-
-            return ActionResult.PASS;
-        });
-        */
 	}
 }

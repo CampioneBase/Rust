@@ -10,6 +10,10 @@ public class RustTick {
     private static long lastTrueTime = System.nanoTime();
     private static double nextInterval = generateNextInterval();
 
+    public static boolean Item_Can_Rusty = false;
+    public static boolean Server_Entity_Can_Rusty = false;
+    public static boolean Client_Entity_Can_Rusty = false;
+
     // 生成下一个间隔时间（秒）
     private static double generateNextInterval() {
         if (random.nextDouble() < 0.0138) {
@@ -37,5 +41,23 @@ public class RustTick {
             return true;
         }
         return false;
+    }
+
+    public static void Judge_Rusty(ServerWorld serverWorld) {
+        if (tick(serverWorld)) {
+            // item
+            if (random.nextDouble() < 0.5) {Item_Can_Rusty = true;}
+            // entity
+            if (random.nextDouble() < 0.6) {Server_Entity_Can_Rusty = true; Client_Entity_Can_Rusty = true;}
+        }
+    }
+
+    public static boolean CanRusty(String type) {
+        switch (type) {
+            case "item" -> {;return Item_Can_Rusty;}
+            case "server_entity" -> {return Server_Entity_Can_Rusty;}
+            case "client_entity" -> {return Client_Entity_Can_Rusty;}
+            default -> throw new RuntimeException("RustTick.CanRusty Type Error");
+        }
     }
 }
