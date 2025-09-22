@@ -114,9 +114,9 @@ public class RustConfig {
             waxed_exposed_IG = convertWithRegex(props.getProperty(WAXED_EXPOSED_IG, "[0.20F,13.5F]").trim());
             waxed_weathered_IG = convertWithRegex(props.getProperty(WAXED_WEATHERED_IG, "[0.17F,12.5F]").trim());
             waxed_oxidized_IG = convertWithRegex(props.getProperty(WAXED_OXIDIZED_IG, "[0.14F,11.5F]").trim());
-            System.out.println("Loaded rust config: use_legacy_logic = " + useLegacyLogic);
-            System.out.println("Loaded rust config: affect_redstone = " + affectRedstone);
-            System.out.println("Loaded rust config: affect_entity = " + affectEntity);
+            Rust.LOGGER.info("Loaded rust config: use_legacy_logic = " + useLegacyLogic);
+            Rust.LOGGER.info("Loaded rust config: affect_redstone = " + affectRedstone);
+            Rust.LOGGER.info("Loaded rust config: affect_entity = " + affectEntity);
             // 若读取的为非本版本配置文件 复制已改配置并生成新配置
             if (!Objects.equals(props.getProperty(MOD_VERSION), modversion)) {
                 Rust.LOGGER.warn("Already loaded into the old version config file, updating to the new version config");
