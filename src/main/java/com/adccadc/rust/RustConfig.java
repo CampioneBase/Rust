@@ -47,14 +47,14 @@ public class RustConfig {
 
     private static boolean affectEntity = true; // 是否影响实体
     // 各种铁傀儡的生物属性
-    private static final List<?> default_IG = new ArrayList<>(Arrays.asList((double) 0.25F, (double) 15.0F)); //原版铁傀儡属性(移动速度，攻击伤害)
-    private static List<?> exposed_IG = new ArrayList<>(Arrays.asList((double) 0.22F, (double) 14.0F));
-    private static List<?> weathered_IG = new ArrayList<>(Arrays.asList((double) 0.19F, (double) 13.0F));
-    private static List<?> oxidized_IG = new ArrayList<>(Arrays.asList((double) 0.16F, (double) 12.0F));
-    private static List<?> waxed_IG = new ArrayList<>(Arrays.asList((double) 0.23F, (double) 14.5F));
-    private static List<?> waxed_exposed_IG = new ArrayList<>(Arrays.asList((double) 0.20F, (double) 13.5F));
-    private static List<?> waxed_weathered_IG = new ArrayList<>(Arrays.asList((double) 0.17F, (double) 12.5F));
-    private static List<?> waxed_oxidized_IG = new ArrayList<>(Arrays.asList((double) 0.14F, (double) 11.5F));
+    private static final List<Float> default_IG = new ArrayList<Float>(Arrays.asList(0.25F, 15.0F)); //原版铁傀儡属性(移动速度，攻击伤害)
+    private static List<Float> exposed_IG = new ArrayList<Float>(Arrays.asList(0.22F, 14.0F));
+    private static List<Float> weathered_IG = new ArrayList<Float>(Arrays.asList(0.19F, 13.0F));
+    private static List<Float> oxidized_IG = new ArrayList<Float>(Arrays.asList(0.16F, 12.0F));
+    private static List<Float> waxed_IG = new ArrayList<Float>(Arrays.asList(0.23F, 14.5F));
+    private static List<Float> waxed_exposed_IG = new ArrayList<Float>(Arrays.asList(0.20F, 13.5F));
+    private static List<Float> waxed_weathered_IG = new ArrayList<Float>(Arrays.asList(0.17F, 12.5F));
+    private static List<Float> waxed_oxidized_IG = new ArrayList<Float>(Arrays.asList(0.14F, 11.5F));
 
     private RustConfig() {}
 
@@ -75,7 +75,7 @@ public class RustConfig {
         return result;
     }
 
-    protected static String formatWithF(List<?> list) {
+    protected static String formatWithF(List<Float> list) {
         return list.stream()
                 .map(obj -> {
                     if (obj instanceof Number) {
@@ -195,11 +195,11 @@ public class RustConfig {
     public static Integer getWaxed_weathered_WPPB() {return affectRedstone ? waxed_weathered_WPPB : 150;}
     public static Integer getWaxed_oxidized_WPPB() {return affectRedstone ? waxed_oxidized_WPPB : 150;}
 
-    public static List<?> getExposed_IG() {return affectEntity ? exposed_IG : default_IG;}
-    public static List<?> getWeathered_IG() {return affectEntity ? weathered_IG : default_IG;}
-    public static List<?> getOxidized_IG() {return affectEntity ? oxidized_IG : default_IG;}
-    public static List<?> getWaxed_IG() {return affectEntity ? waxed_IG : default_IG;}
-    public static List<?> getWaxed_exposed_IG() {return affectEntity ? waxed_exposed_IG : default_IG;}
-    public static List<?> getWaxed_weathered_IG() {return affectEntity ? waxed_weathered_IG : default_IG;}
-    public static List<?> getWaxed_oxidized_IG() {return affectEntity ? waxed_oxidized_IG : default_IG;}
+    public static List<Float> getExposed_IG() {return affectEntity ? exposed_IG : default_IG;}
+    public static List<Float> getWeathered_IG() {return affectEntity ? weathered_IG : default_IG;}
+    public static List<Float> getOxidized_IG() {return affectEntity ? oxidized_IG : default_IG;}
+    public static List<Float> getWaxed_IG() {return affectEntity ? waxed_IG : default_IG;}
+    public static List<Float> getWaxed_exposed_IG() {return affectEntity ? waxed_exposed_IG : default_IG;}
+    public static List<Float> getWaxed_weathered_IG() {return affectEntity ? waxed_weathered_IG : default_IG;}
+    public static List<Float> getWaxed_oxidized_IG() {return affectEntity ? waxed_oxidized_IG : default_IG;}
 }
