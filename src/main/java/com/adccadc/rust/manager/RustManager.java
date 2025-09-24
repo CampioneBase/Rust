@@ -73,6 +73,10 @@ public class RustManager {
         return true;
     }
 
+    public boolean canRusted(){
+        return !this.state.isWaxed && this.state.level < this.maxLevel;
+    }
+
     public RustState getState(){
         return state;
     }

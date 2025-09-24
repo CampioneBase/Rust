@@ -43,13 +43,11 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     @Unique
     public RustManager rust = new RustManager(new ItemStack(Moditems.IRON_RUST, 4), 3);
 
+    @Unique
+    public int rustLayTime = 9000;
+
     public IronGolemEntityMixin(EntityType<? extends IronGolemEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    @Unique
-    public IronGolemEntityProxy proxy(){
-        return this;
     }
 
     @Unique
@@ -109,7 +107,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     )
     protected void interactMobWithRustActions(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir){
         ItemStack itemStack = player.getStackInHand(hand);
-        /*
+
         if (itemStack.isOf(Items.WATER_BUCKET)){
             // 处理物品
             if(!player.isCreative()){
@@ -126,7 +124,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
             }
 
         }
-        */
+
         // 物品是否含有斧头标签
         if (itemStack.isIn(ItemTags.AXES)){
             // 执行一次除锈
@@ -206,6 +204,7 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
     public void tryAttack(ServerWorld world, Entity target, CallbackInfoReturnable<Boolean> cir) {
         float f1 = AttackDamage();
         float g1 = (int)f1 > 0 ? f1 / 2.0F + (float)this.random.nextInt((int)f1) : f1;
+        Rust.LOGGER.info("铁傀儡伤害：{}", g1);
         DamageSource damageSource = this.getDamageSources().mobAttack(this);
         boolean bl1 = target.damage(world, damageSource, g1);
         if (bl1 && target instanceof LivingEntity livingEntity) {
@@ -229,36 +228,30 @@ public abstract class IronGolemEntityMixin extends GolemEntity implements IronGo
 
     @Override
     public float getMovementSpeed() {
-        float movementspeed = super.getMovementSpeed();
-        if (!this.rust.getState().isWaxed) {
-             switch (this.rust.getState().level) {
-                case 0 -> movementspeed = (float) this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED);
-                case 1 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getExposed_IG().getFirst()));
-                case 2 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWeathered_IG().getFirst()));
-                case 3 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getOxidized_IG().getFirst()));
-            }
-        } else {
-            switch (this.rust.getState().level) {
-                case 0 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_IG().getFirst()));
-                case 1 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_exposed_IG().getFirst()));
-                case 2 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_weathered_IG().getFirst()));
-                case 3 -> movementspeed = (float) (this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED) - (0.25F - (float) RustConfig.getWaxed_oxidized_IG().getFirst()));
-            }
-        }
-        return movementspeed;
+        float[] speed = {
+                (float) this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED),
+                RustConfig.getExposed_IG().getFirst(),
+                RustConfig.getWeathered_IG().getFirst(),
+                RustConfig.getOxidized_IG().getFirst()
+                };
+        float[] waxed_speed = {
+                RustConfig.getWaxed_IG().getFirst(),
+                RustConfig.getWaxed_exposed_IG().getFirst(),
+                RustConfig.getWaxed_weathered_IG().getFirst(),
+                RustConfig.getWaxed_oxidized_IG().getFirst(),
+        };
+        return this.rust.getState().isWaxed ? waxed_speed[this.rust.getState().level] : speed[this.rust.getState().level];
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (!this.getWorld().isClient && this.age % 5 == 0) {
-            this.updateGoalControls();
-        }
-        if (this.getWorld().isClient) {
-            if (RustTick.CanRusty("client_entity")) {RustTick.Client_Entity_Can_Rusty = false ;this.rust.tryRusted();}
-        }
-        if (!this.getWorld().isClient) {
-            if (RustTick.CanRusty("server_entity")) {RustTick.Server_Entity_Can_Rusty = false ;this.rust.tryRusted();}
+    @Inject(
+            method = "tickMovement",
+            at = @At("TAIL")
+    )
+    public void tickMovementWithRust(CallbackInfo ci){
+        int multiply = this.isTouchingWater() ? 2 : 1;
+        if(this.rust.canRusted() && (this.rustLayTime -= multiply) <= 0){
+            this.rust.tryRusted();
+            this.rustLayTime = 9000;
         }
     }
 }
